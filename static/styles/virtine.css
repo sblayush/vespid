@@ -1,0 +1,187 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #fff;
+}
+
+.nav {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #ddd;
+  font-family: "Oswald", sans-serif;
+  font-weight: 300;
+  font-size: 17px;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+}
+.nav .title {
+  position: fixed;
+  left: 100px;
+  top: -10px;
+}
+.logo-icon {
+  position: fixed;
+  left: 500px;
+  top: 8px;
+}
+/* Menu */
+
+.nav .menu {
+  float: right;
+  list-style: none;
+  margin-top: 5px;
+}
+.menu > li {
+  display: inline;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.menu a {
+  color: #898989;
+}
+.menu .border a {
+  border: 1px solid #7fcce5;
+  padding: 15px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+/* Jumbotron */
+
+.jumbotron {
+  height: 500px;
+  position: initial;
+}
+.jumbotron .container {
+  position: relative;
+  top: 70px;
+}
+
+.jumbotron h3 {
+  color: #313131;
+  font-size: 40px;
+  font-family: "Oswald", sans-serif;
+  font-weight: 300;
+  padding-bottom: 40px;
+  text-align: center;
+}
+.btn {
+  display: inline-block;
+  padding: 4px 14px;
+  margin-bottom: 0px;
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 1px;
+  border-color: #f7f6f6;
+  line-height: 20px;
+  font-weight: bold;
+  color: #f7f6f6;
+  background-color: transparent;
+  position: relative;
+  top: 50px;
+  left: 340px;
+}
+.btn:hover {
+  background-image: none;
+  background-color: #808080;
+  color: #f7f6f6;
+}
+.mywork {
+  height: 500px;
+  background-color: #ffffff;
+}
+.mywork .container {
+  position: relative;
+  top: 35px;
+}
+.mywork h3 {
+  color: #313131;
+  font-size: 40px;
+  font-family: "Oswald", sans-serif;
+  font-weight: 300;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+.myskills {
+  height: 600px;
+  background-color: #eee;
+}
+.myskills .container {
+  position: relative;
+  top: 70px;
+}
+.myskills h3 {
+  color: #313131;
+  font-size: 40px;
+  font-family: "Oswald", sans-serif;
+  font-weight: 300;
+  padding-bottom: 40px;
+  text-align: center;
+}
+.validate_div {
+  height: 500px;
+  background-color: #ffffff;
+}
+.validate_div .container {
+  position: relative;
+  top: 35px;
+}
+.validate_div h3 {
+  color: #313131;
+  font-size: 40px;
+  font-family: "Oswald", sans-serif;
+  font-weight: 300;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+.container {
+  width: 960px;
+}
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  width: 90%;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.content {
+  padding: 25px;
+}
+.tab1cards {
+  display: flex;
+  flex-direction: row;
+}
+.btnn {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.button_ {
+  background-color: #9bbabb;
+  border: none;
+  color: black;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.button_:hover {
+  background-color: #f1f1f1;
+}
