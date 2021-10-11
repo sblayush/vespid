@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request, render_template
 import json
-import pandas as pd
 
 _PWD = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,6 +18,7 @@ def insert_code(vname, vcode):
     with open("{}/tempelate.txt".format(_TEMP_PATH), 'r') as f:
         temp_code = f.read()
     temp_code = temp_code.replace("####vcode####", vcode)
+    temp_code = temp_code.replace("####vname####", vname)
     with open("{}/virts/c/{}.c".format(_PWD, vname), 'w') as f:
         f.write(temp_code)
 

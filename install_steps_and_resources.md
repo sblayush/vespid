@@ -1,34 +1,34 @@
 # Notes
 
-### Get the virtines project
+### Install dependencies
+```
+sudo apt-get install nasm
+sudo apt-get install cmake cmake-doc ninja-build
+```
+
+### Clone the virtines project
 ```
 git clone git@github.com:HExSA-Lab/vm-funcs.git
 ```
  
-### install and build llvm (https://llvm.org/docs/GettingStarted.html#example-with-clang)
+### install and build llvm (https://llvm.org/docs/GettingStarted.html) with clang
 ```
 git clone https://github.com/llvm/llvm-project.git
 cd llvm-project/
 mkdir build
 cd build/
-```
 
-### make Ninja
-```
-cmake -G Ninja ../llvm
-```
+cmake -DLLVM_ENABLE_PROJECTS=clang -G Ninja ../llvm
 
-### build everything (might not be strictly required to build all, but I am not sure of the dependencies)
-```
 cmake --build .
+sudo cmake --build . --target install
 cd ../..
 ```
 
-### install clang if not there
-```which clang
-sudo apt install clang
-
-cd vm-funcs/
+### check if clang is there
+```
+which clang
+cd ..
 ```
 
 ### build wasp
@@ -50,20 +50,39 @@ sudo make install
 cd ..
 ```
 
-### you can now use vcc to compile virtine programs like so
+### Tets bu using vcc to compile virtine programs
 ```
 vcc pass/tests/add.c -o add
 ./add
 ```
 
-### other dependencies that might be required
+### Clone vui
 ```
-apt-get install nasm
-sudo apt-get install cmake cmake-doc ninja-build
-openssl
+git clone git@github.com:sblayush/vui.git
 ```
 
-### open a port for tcp service
+### Install python dependencies
+```
+pip install flask, pandas
+```
+
+### Open a port for tcp service
 ```
 sudo ufw allow 8989/tcp
+```
+
+### Start server
+```
+cd vui
+python3 app.py
+```
+
+### Open in URL
+```
+http://192.5.86.153:8989/
+```
+
+### Additional notes
+```
+openssl
 ```
