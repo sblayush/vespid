@@ -1,21 +1,15 @@
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include "virtine.h"
 #include <stdio.h>
 #include <sys/types.h>
+#include "####vname####.h"
 
 
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 
-####vcode####
+virtine ####vcode####
 
 #pragma GCC pop_options
-
-
-int main(int argc, char **argv) {
-	int res = ####vname####(####vargs####);
-}

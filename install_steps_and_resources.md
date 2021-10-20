@@ -28,7 +28,7 @@ cd ../..
 ### check if clang is there
 ```
 which clang
-cd ..
+cd ../vm-funcs
 ```
 
 ### build wasp
@@ -63,7 +63,7 @@ git clone git@github.com:sblayush/vui.git
 
 ### Install python dependencies
 ```
-pip install flask, pandas
+pip install flask
 ```
 
 ### Open a port for tcp service

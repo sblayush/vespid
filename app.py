@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, render_template
 import json
+import subprocess
 
 _PWD = os.path.dirname(os.path.abspath(__file__))
 
@@ -14,21 +15,35 @@ _EXEC_PATH = "{}/virts/exec".format(_PWD)
 
 
 def insert_code(vname, vcode):
-    temp_code = None
-    with open("{}/tempelate.txt".format(_TEMP_PATH), 'r') as f:
-        temp_code = f.read()
-    temp_code = temp_code.replace("####vcode####", vcode)
-    temp_code = temp_code.replace("####vname####", vname)
-    with open("{}/virts/c/{}.c".format(_PWD, vname), 'w') as f:
-        f.write(temp_code)
+    func_code = None
+    with open("{}/func_temp.c".format(_TEMP_PATH), 'r') as f:
+        func_code = f.read()
+    func_code = func_code.replace("####vcode####", vcode)
+    func_code = func_code.replace("####vname####", vname)
+    with open("{}/func_{}.c".format(_CODE_PATH, vname), 'w') as f:
+        f.write(func_code)
+    
+    with open("{}/{}.h".format(_CODE_PATH, vname), 'w') as f:
+        f.write(vcode.split('{')[0] + ";")
 
+    with open("{}/main_temp.c".format(_TEMP_PATH), 'r') as f:
+        main_code = f.read()
+    main_code = main_code.replace("####vname####", vname)
+    with open("{}/main_{}.c".format(_CODE_PATH, vname), 'w') as f:
+        f.write(main_code)
 
-def compile_code(vcode):
-    pass
+def compile_code(vname):
+    subprocess.call(['vcc', '{}/func_{}.c'.format(_CODE_PATH, vname), '{}/main_{}.c'.format(_CODE_PATH, vname), '-o', '{}/{}'.format(_EXEC_PATH, vname)])
 
 
 def execute_code(vname, args):
-    pass
+    args = args.split()
+    p = subprocess.Popen(["{}/{}".format(_EXEC_PATH, vname)]+args, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    if not err:
+        return out.decode()
+    else:
+        return err.decode()
 
 
 @application.route("/register", methods=["POST"])

@@ -1,2 +1,7 @@
 .idea
-virts/
+
+virts/c/*
+virts/exec/*
+# exception to the rule
+!virts/c/virtine.h
+!virts/exec/.gitkeep
