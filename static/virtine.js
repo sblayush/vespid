@@ -16,7 +16,7 @@ $(function () {
             processData: false,
             success: function (data) {
                 console.log(data);
-                //alert(data);
+                alert(data);
                 res = JSON.parse(data)
             },
         });
@@ -41,7 +41,7 @@ $(function () {
             processData: false,
             success: function (data) {
                 console.log(data);
-                //alert(data);
+                alert(data);
                 res = JSON.parse(data)
             },
         });
