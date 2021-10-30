@@ -63,7 +63,10 @@ git clone git@github.com:sblayush/vui.git
 
 ### Install python dependencies
 ```
-pip install flask
+pip install flask, fastapi
+pip install pydantic
+pip install uvicorn
+pip install jinja2
 ```
 
 ### Open a port for tcp service
@@ -74,7 +77,7 @@ sudo ufw allow 8989/tcp
 ### Start server
 ```
 cd vui
-python3 app.py
+python3 fast_app.py
 ```
 
 ### Open in URL

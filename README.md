@@ -11,10 +11,16 @@ TODO:
 - Execute virtines using restful APIs
 - Using namespace to map actions
 - Create a main class to handle toplevel stuff
-- Use fastapi/other service to achieve production level code
+- ~~Use fastapi/other service to achieve production level code~~
 
 Steps to start the Server:
-```python3 app.py```
+```python3 fast_app.py```
+
+To view webpage:
+```host:port/```
+
+To view swagger documentation:
+```host:port/docs```
 
 ### *Notes
 - By default running on port 8989

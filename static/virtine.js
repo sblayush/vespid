@@ -3,21 +3,27 @@ $(function () {
         var vname = $("#vname").val();
         var vcode = $("#vcode").val();
 
-        var fd = new FormData();
-        fd.append("vname", vname);
-        fd.append("vcode", vcode);
+        var sendInfo = {
+            "vname": vname,
+            "vcode": vcode
+        }
 
         $.ajax({
             type: 'POST',
-            url: '/actions/create',
-            data: fd,
-            contentType: false,
+            url: '/actions/'+vname+'/create',
+            data: JSON.stringify(sendInfo),
+            contentType: "application/json; charset=utf-8",
             cache: false,
             processData: false,
             success: function (data) {
                 console.log(data);
-                alert(data);
-                res = JSON.parse(data)
+                alert(data.resp);
+                res = data
+            },
+            error: function (data) {
+                console.log(data);
+                alert(data.responseJSON.resp);
+                res = data
             },
         });
     });
@@ -28,21 +34,27 @@ $(function () {
         var args = $("#args").val();
         var vname = $("#vname").val();
 
-        var fd = new FormData();
-        fd.append("vname", vname);
-        fd.append("args", args);
+        var sendInfo = {
+            "vname": vname,
+            "vargs": args
+        }
 
         $.ajax({
             type: 'POST',
-            url: '/actions/invoke',
-            data: fd,
-            contentType: false,
+            url: '/actions/'+vname+'/invoke',
+            data: JSON.stringify(sendInfo),
+            contentType: "application/json; charset=utf-8",
             cache: false,
             processData: false,
             success: function (data) {
                 console.log(data);
-                alert(data);
-                res = JSON.parse(data)
+                alert(data.resp);
+                res = data
+            },
+            error: function (data) {
+                console.log(data);
+                alert(data.responseJSON.resp);
+                res = data
             },
         });
     });

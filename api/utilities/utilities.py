@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime
 
 def get_dir_path():
@@ -18,10 +19,15 @@ def generate_run_id():
     return datetime.now().strftime('%Y%m%d%H%M%S')
 
 
-
 def get_list_from_str(s):
     item_list = list(map(lambda x: x.strip(), s.split(',')))
     print(item_list)
+
+
+def read_json(path):
+	with open(path) as f:
+		d = json.load(f)
+	return d
 
 
 def get_str_from_list(item_list):

@@ -78,6 +78,7 @@ logs/
 
 # Local Config File
 config/config.py
+config/appConfig.dat
 
 # backup files
 bkp/
