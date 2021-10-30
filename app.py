@@ -1,53 +1,14 @@
 import os
 from flask import Flask, request, render_template
+from api.actions.CAction import CAction
+from api.actions.JSAction import JSAction
 import json
-import subprocess
-
-_PWD = os.path.dirname(os.path.abspath(__file__))
 
 application = Flask(__name__, static_url_path="/static")
-DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-application.config['UPLOAD_FOLDER'] = _PWD
-
-_TEMP_PATH = "{}/temp".format(_PWD)
-_CODE_PATH = "{}/virts/c".format(_PWD)
-_EXEC_PATH = "{}/virts/exec".format(_PWD)
 
 
-def insert_code(vname, vcode):
-    func_code = None
-    with open("{}/func_temp.c".format(_TEMP_PATH), 'r') as f:
-        func_code = f.read()
-    func_code = func_code.replace("####vcode####", vcode)
-    func_code = func_code.replace("####vname####", vname)
-    with open("{}/func_{}.c".format(_CODE_PATH, vname), 'w') as f:
-        f.write(func_code)
-    
-    with open("{}/{}.h".format(_CODE_PATH, vname), 'w') as f:
-        f.write(vcode.split('{')[0] + ";")
-
-    with open("{}/main_temp.c".format(_TEMP_PATH), 'r') as f:
-        main_code = f.read()
-    main_code = main_code.replace("####vname####", vname)
-    with open("{}/main_{}.c".format(_CODE_PATH, vname), 'w') as f:
-        f.write(main_code)
-
-def compile_code(vname):
-    subprocess.call(['vcc', '{}/func_{}.c'.format(_CODE_PATH, vname), '{}/main_{}.c'.format(_CODE_PATH, vname), '-o', '{}/{}'.format(_EXEC_PATH, vname)])
-
-
-def execute_code(vname, args):
-    args = args.split()
-    p = subprocess.Popen(["{}/{}".format(_EXEC_PATH, vname)]+args, stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    if not err:
-        return out.decode()
-    else:
-        return err.decode()
-
-
-@application.route("/register", methods=["POST"])
-def register():
+@application.route("/actions/create", methods=["POST"])
+def create():
     if request.method == 'POST':
         if "vname" not in request.form:
             resp = {"resp": "No vname data"}
@@ -57,15 +18,25 @@ def register():
             return json.dumps(resp)
         vname = request.form["vname"]
         vcode = request.form["vcode"]
+        language = 'c'
 		
-        insert_code(vname, vcode)
-        compile_code(vname)
+        if vname in actions_map:
+            resp = {"resp": "Action already exists"}
+            return json.dumps(resp)
 
-        resp = {"resp": "{} registered successfully".format(vname)}
+        if language == 'c':
+            act = CAction()
+        else:
+            act = JSAction()
+        res = act.create(vname, vcode)
+
+        actions_map[vname] = act
+
+        resp = {"resp": res}
         return json.dumps(resp)
 
 
-@application.route("/execute", methods=["POST"])
+@application.route("/actions/invoke", methods=["POST"])
 def execute():
     if request.method == 'POST':
         if "vname" not in request.form:
@@ -77,7 +48,30 @@ def execute():
         vname = request.form["vname"]
         args = request.form["args"]
 		
-        res = execute_code(vname, args)
+        if vname not in actions_map:
+            resp = {"resp": "Action '{}' does not exist".format(vname)}
+            return json.dumps(resp)
+
+        act = actions_map[vname]
+        res = act.invoke(args)
+
+        resp = {"resp": res}
+        return json.dumps(resp)
+
+@application.route("/actions/get", methods=["GET"])
+def get():
+    if request.method == 'GET':
+        if "vname" not in request.form:
+            resp = {"resp": "No vname data"}
+            return json.dumps(resp)
+        vname = request.form["vname"]
+		
+        if vname not in actions_map:
+            resp = {"resp": "Action '{}' does not exist".format(vname)}
+            return json.dumps(resp)
+
+        act = actions_map[vname]
+        res = act.get()
 
         resp = {"resp": res}
         return json.dumps(resp)
@@ -89,5 +83,7 @@ def index():
 
 
 if __name__ == "__main__":
+    from api.initialize import initialize
+    actions_map = {}
     application.debug = True
     application.run(host='0.0.0.0',  port=8989)

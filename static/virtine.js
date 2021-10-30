@@ -1,5 +1,5 @@
 $(function () {
-    $('#reg_btn').click(function () {
+    $('#create_btn').click(function () {
         var vname = $("#vname").val();
         var vcode = $("#vcode").val();
 
@@ -9,7 +9,7 @@ $(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/register',
+            url: '/actions/create',
             data: fd,
             contentType: false,
             cache: false,
@@ -24,7 +24,7 @@ $(function () {
 });
 
 $(function () {
-    $('#exec_btn').click(function () {
+    $('#invoke_btn').click(function () {
         var args = $("#args").val();
         var vname = $("#vname").val();
 
@@ -34,7 +34,7 @@ $(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/execute',
+            url: '/actions/invoke',
             data: fd,
             contentType: false,
             cache: false,
