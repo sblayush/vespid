@@ -2,11 +2,12 @@ from fastapi import FastAPI, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from fastapi.exceptions import RequestValidationError
 
 from api.utilities.utilities import get_dir_path, create_dir, read_json
-from api.actions.CAction import CAction
-from api.actions.JSAction import JSAction
-from api.initialize import initialize
+from api.actions.ActionsManager import ActionsManager
+from api.VUIApp.VUIApp import VUIApp
+from api.common.error import *
 
 from datetime import datetime
 import json
@@ -27,13 +28,13 @@ host = app_config['host']
 rload = app_config['reload']
 
 app = FastAPI()
+AM = ActionsManager()
 
 app.mount(
     "/static",
     StaticFiles(directory="{}/static".format(_APP_PATH)),
     name="static",
 )
-actions_map = {}
 
 @app.get("/ping")
 def ping(response: Response):
@@ -42,42 +43,45 @@ def ping(response: Response):
 
 
 class CodeParam(BaseModel):
-    vcode: str
+	vcode: str
+	runtime: str
+
+class PlaygroundParam(BaseModel):
+	playgroundId: str
 
 class ArgParam(BaseModel):
-    vargs: str
+    vargs: dict
 
+def log_message(request: Request, e):
+    print('start error'.center(60, '*'))
+    print(f'{request.method} {request.url}')
+    print(f'error is {e}')
+    print('end error'.center(60, '*'))
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    log_message(request, exc)
 
 @app.post("/actions/{vname}/create")
-def create(vname: str, code: CodeParam, response: Response):
+def create(vname: str, code: CodeParam, response: Response, request: Request):
 	"""
 	Create an action
 	"""
-	logging.info(
-	"""Got request '/actions/{}/create' with params:
-		vname- {}""".format(vname, vname))
-	if not vname:
-		resp = {"resp": "No vname data"}
-		response.status_code = 400
+	try:
+		logging.info(
+		"""Got request '/actions/{}/create' with params: vname- {}""".format(vname, vname))
+		if not vname or not code:
+			raise MissingArgumentError(vname)
+		vcode = code.vcode
+		runtime = code.runtime
+		res = AM.create_action(vname, vcode, runtime)
+		resp = {"result": "action '{}' created".format(vname)}
 		return resp
-	vcode = code.vcode
-	language = 'c'
-	
-	if vname in actions_map:
-		resp = {"resp": "Action already exists"}
-		response.status_code = 400
+		
+	except Exception as e:
+		resp = {"msg": str(e)}
+		response.status_code = e.status
 		return resp
-
-	if language == 'c':
-		act = CAction()
-	else:
-		act = JSAction()
-	res = act.create(vname, vcode)
-
-	actions_map[vname] = act
-
-	resp = {"resp": res}
-	return resp
 
 
 @app.post("/actions/{vname}/invoke")
@@ -85,44 +89,56 @@ def invoke(vname, args: ArgParam, response: Response):
 	"""
 	Invoke an action
 	"""
-	logging.info(
-	"""Got request '/actions/{}/invoke' with params:
-		vname- {}""".format(vname, vname))
-	if not vname:
-		resp = {"resp": "No vname data"}
-		response.status_code = 400
+	try:
+		logging.info(
+		"""Got request '/actions/{}/invoke' with params: vname- {}""".format(vname, vname))
+		if not vname:
+			raise MissingArgumentError(vname)
+		args = args.vargs
+		res = AM.invoke_action(vname, args)
+		resp = {"result": res}
 		return resp
-	args = args.vargs
-	
-	if vname not in actions_map:
-		resp = {"resp": "Action '{}' does not exist".format(vname)}
-		response.status_code = 400
+	except Exception as e:
+		resp = {"msg": str(e)}
+		response.status_code = e.status
 		return resp
 
-	act = actions_map[vname]
-	res = act.invoke(args)
 
-	resp = {"resp": res}
-	return resp
-
-
-@app.get("/actions/{vname}/get")
+@app.post("/actions/{vname}/get")
 def get(vname, response: Response):
-	if not vname:
-		resp = {"resp": "No vname data"}
-		response.status_code = 400
+	"""
+	Get action info
+	"""
+	try:
+		logging.info(
+		"""Got request '/actions/{}/get' with params: vname- {}""".format(vname, vname))
+		res = AM.get_action(vname)
+		print(res)
+		resp = {"result": res}
 		return resp
-	
-	if vname not in actions_map:
-		resp = {"resp": "Action '{}' does not exist".format(vname)}
-		response.status_code = 400
+	except Exception as e:
+		print(str(e))
+		resp = {"msg": str(e)}
+		response.status_code = e.status
 		return resp
 
-	act = actions_map[vname]
-	res = act.get()
 
-	resp = {"resp": res}
-	return resp
+@app.post("/actions/list")
+def list(params: PlaygroundParam, response: Response):
+	"""
+	Get list of actions
+	"""
+	try:
+		logging.info(
+		"""Got request '/actions/list' with params: userid- {}""".format(params.playgroundId))
+		res = AM.get_actions_list()
+		resp = {"result": res}
+		return resp
+	except Exception as e:
+		resp = {"msg": str(e)}
+		response.status_code = e.status
+		return resp
+
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):

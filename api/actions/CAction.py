@@ -1,5 +1,6 @@
 from api.actions.BaseAction import BaseAction
 from api.utilities.utilities import create_dir, get_dir_path
+from api.common.error import *
 import subprocess
 
 _PWD = get_dir_path()
@@ -9,7 +10,7 @@ _EXEC_PATH = "{}/virts/exec".format(_PWD)
 
 class CAction(BaseAction):
 	def __init__(self):
-		self.language = 'c'
+		self.runtime = 'c'
 	
 
 	def insert_code(self, vcode):
@@ -30,8 +31,8 @@ class CAction(BaseAction):
 			"{}/{}/func_{}.c".format(_CODE_PATH, self.action_name, self.action_name), 
 			"-o", "{}/{}/{}".format(_EXEC_PATH, self.action_name, self.action_name)])
 
-	def execute_code(self, args):
-		args = args.split()
+	def execute_code(self, vargs):
+		args = [str(_) for _ in list(vargs.values())]
 		p = subprocess.Popen(
 			["{}/{}/{}".format(_EXEC_PATH, self.action_name, self.action_name)]+args, 
 			stdout=subprocess.PIPE)
@@ -39,5 +40,5 @@ class CAction(BaseAction):
 		if not err:
 			return out.decode()
 		else:
-			return err.decode()
+			raise  ActionInvokeError(self.action_name, err.decode())
 	
