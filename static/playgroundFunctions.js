@@ -162,8 +162,7 @@ function initializeUserPackage() {
     let userPackage = JSON.parse(result)
     if (userPackage && userPackage.actions && Array.isArray(userPackage.actions)) {
       for (action of userPackage.actions) {
-        let kind = getAnnotation(action, "exec")
-        window.actionList.push({ name: action.name, kind: kind } )
+        window.actionList.push({ name: action.vname, kind: action.runtime } )
       }
     }
     return window.actionList   // For definiteness, to carry on the promise chain.  actionList is also global.
@@ -437,7 +436,7 @@ function deleteAction() {
 // Delete the remote copy of an action if present.  If absent, no error is indicated except on the console.  Local processing
 // proceeds in either case.
 function deleteRemote(vname) {
-  return makeOpenWhiskRequest('playground-delete.json', { playgroundId: window.playgroundId, vname: vname }).then(result => {
+  return makeOpenWhiskRequest(vname+'/delete', { playgroundId: window.playgroundId, vname: vname }).then(result => {
     console.log("deleted", vname)
     console.log("full result", result)
   }).catch(err => {
@@ -452,10 +451,9 @@ function getCode(vname) {
   return makeOpenWhiskRequest(vname+'/get', { playgroundId: window.playgroundId, vname: vname }).then(result => {
        let response = JSON.parse(result)
        console.log("getCode response", response)
-       if ('exec' in response) {
+       if ('result' in response) {
          console.log("Code retrieved from deployed action")
-           let exec = response.exec
-           let code = exec.code
+           let code = response.result.vcode
            window.editor.setValue(code)
            editorContentsChanged = false // Setting the editor contents will fire the change event but there is no need to re-save.
        } else {

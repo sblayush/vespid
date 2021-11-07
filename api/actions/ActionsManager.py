@@ -54,4 +54,8 @@ class ActionsManager(ActionsManagerInterface):
 		pass
 
 	def delete_action(self, vname):
-		pass
+		if vname in self.actions:
+			del self.actions[vname]
+			return "Action '{}' deleted successfully!"
+		else:
+			raise InvalidActionError(vname)

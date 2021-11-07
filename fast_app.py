@@ -113,11 +113,9 @@ def get(vname, response: Response):
 		logging.info(
 		"""Got request '/actions/{}/get' with params: vname- {}""".format(vname, vname))
 		res = AM.get_action(vname)
-		print(res)
 		resp = {"result": res}
 		return resp
 	except Exception as e:
-		print(str(e))
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
@@ -132,6 +130,23 @@ def list(params: PlaygroundParam, response: Response):
 		logging.info(
 		"""Got request '/actions/list' with params: userid- {}""".format(params.playgroundId))
 		res = AM.get_actions_list()
+		resp = {"actions": res}
+		return resp
+	except Exception as e:
+		resp = {"msg": str(e)}
+		response.status_code = e.status
+		return resp
+
+
+@app.post("/actions/{vname}/delete")
+def delete(vname, response: Response):
+	"""
+	Delete action
+	"""
+	try:
+		logging.info(
+		"""Got request '/actions/{}/delete' with params: vname- {}""".format(vname, vname))
+		res = AM.delete_action(vname)
 		resp = {"result": res}
 		return resp
 	except Exception as e:
