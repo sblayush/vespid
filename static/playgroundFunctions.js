@@ -700,7 +700,6 @@ function createClicked() {
     setAreaContents("resultText", "Creating...")
     let t0 = new Date().getTime()
     let inputStr = elem("input").value
-    let params = JSON.parse(inputStr)
     let arg = { vcode : contents, runtime: window.language.kind }
     let vname = window.currentAction
 
@@ -813,7 +812,13 @@ function runClicked() {
     setAreaContents("resultText", "Running...")
     let t0 = new Date().getTime()
     let inputStr = elem("input").value
-    let params = JSON.parse(inputStr)
+    let params = null
+    try{
+      params = JSON.parse(inputStr)
+    }catch(e){
+      setAreaContents("resultText", "Error parsing input parameters as json", true)
+      return
+    }
     let arg = { vargs: params, playgroundId: window.playgroundId, vname: window.currentAction, runtime: window.language.kind }
     console.log(arg)
     let vname = window.currentAction

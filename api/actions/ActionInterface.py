@@ -4,6 +4,7 @@ class ActionInterface(ABC):
 	def __init__(self):
 		self.action_name = None
 		self.action_code = None
+		self.parameters = None
 		self.runtime = None
 		self.endpoint_url = None
 	

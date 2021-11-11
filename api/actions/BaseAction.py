@@ -24,7 +24,8 @@ class BaseAction(ActionInterface):
 	
 	def create(self, vname, vcode):
 		self.action_name = vname
-		self.insert_code(vcode)
+		self.preprocess_action(vname, vcode)
+		self.insert_code(vname, vcode)
 		self.compile_code()
 		return RC_OK
 	
