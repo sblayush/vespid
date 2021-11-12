@@ -3,17 +3,17 @@
 
 ### Install dependencies
 ```
-sudo apt install nasm-12
-sudo apt-get install cmake cmake-doc ninja-build
+sudo apt install nasm
+sudo apt-get install cmake cmake-doc ninja-build -y
 
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
 # Fingerprint: 6084 F3CF 814B 57C1 CF12 EFD5 15CF 4D18 AF4F 7421
 
 # LLVM
-apt-get install libllvm-12-ocaml-dev libllvm12 llvm-12 llvm-12-dev llvm-12-doc llvm-12-examples llvm-12-runtime
+sudo apt-get install libllvm-12-ocaml-dev libllvm12 llvm-12 llvm-12-dev llvm-12-doc llvm-12-examples llvm-12-runtime -y
 
 # Clang and co
-apt-get install clang-12 clang-tools-12 clang-12-doc libclang-common-12-dev libclang-12-dev libclang1-12 clang-format-12 clangd-12
+sudo apt-get install clang-12 clang-tools-12 clang-12-doc libclang-common-12-dev libclang-12-dev libclang1-12 clang-format-12 clangd-12 -y
 ```
 
 ### Link llc and clang
@@ -35,8 +35,6 @@ cd wasp/
 make
 sudo make install
 #That will make and install wasp, a library that the pass utilizes.
-
-cd ..
 ```
 
 ### build pass
@@ -44,8 +42,6 @@ cd ..
 cd pass/
 sudo make
 sudo make install
-
-cd ..
 ```
 
 ### Tets bu using vcc to compile virtine programs
@@ -61,7 +57,7 @@ git clone git@github.com:sblayush/vui.git
 
 ### Install python dependencies
 ```
-pip install flask, fastapi
+pip install flask fastapi
 pip install pydantic
 pip install uvicorn
 pip install jinja2
@@ -89,13 +85,10 @@ openssl
 https://apt.llvm.org/
 ```
 
+
+
+
 ## OLD
----
-
-
-
-
-
 ### Install dependencies
 ```
 sudo apt-get install nasm
