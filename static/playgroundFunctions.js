@@ -438,6 +438,7 @@ function deleteAction() {
 function deleteRemote(vname) {
   return makeOpenWhiskRequest(vname+'/delete', { playgroundId: window.playgroundId, vname: vname }).then(result => {
     console.log("deleted", vname)
+    setAreaContents("resultText", result.result, false)
     console.log("full result", result)
   }).catch(err => {
     console.log("not deleted (perhaps doesn't exist)", vname)
@@ -691,17 +692,39 @@ function setAreaContents(areaID, contents, error) {
   elem(areaID).innerHTML = innerHTML
 }
 
+function get_parameters(vcode){
+  let parameters = {}
+  let inp_params = vcode.split('(')[1].split(')')[0].split(',')
+  for (param of inp_params){
+    param = param.trim().split(' ')
+		let typ = param[0]
+    let nam = param[1]
+    parameters[nam] = ""
+    if (typ == "int")
+      parameters[nam] = 1
+  }
+  return parameters
+}
+
+function get_action_name(vcode){
+  let pieces = vcode.split('(')[0].split(' ')
+  return pieces[pieces.length - 1]
+}
 
 // Respond to click of the run button
 function createClicked() {
   window.editorContentsChanged = false  // don't permit save to run in parallel
   let contents = window.editor.getValue()
-    console.log("Contents: ", contents)
     setAreaContents("resultText", "Creating...")
     let t0 = new Date().getTime()
     let inputStr = elem("input").value
     let arg = { vcode : contents, runtime: window.language.kind }
     let vname = window.currentAction
+
+    if (get_action_name(contents)!=vname){
+      setAreaContents("resultText", "Name of the action should be same as name of the function", true)
+      return
+    }
 
     return makeOpenWhiskRequest(vname+"/create", arg).then(result => {
     let elapsed = new Date().getTime() - t0
@@ -725,6 +748,8 @@ function createClicked() {
         setAreaContents("resultText", '<img src="data:image/png;base64, ' + result.body + '">', false)
       } else {
         setAreaContents("resultText", JSON.stringify(result, null, 4), false)
+        let params = get_parameters(contents)
+        elem("input").value = JSON.stringify(params, null, 4)
       }
 
       let timingStr = "Network: " + network + " ms<br>Deploy: " + deploy + " ms<br>Exec: " + exec + " ms"
@@ -852,7 +877,7 @@ function runClicked() {
     }
     }).catch(err => {
         console.log("Error contacting service", err)
-        setAreaContents("resultText", "Error contacting service, status = " + err.status, true)
+        setAreaContents("resultText", err.msg + ", status = " + err.status, true)
         setAreaContents("timingText", "", false)
    });
 }

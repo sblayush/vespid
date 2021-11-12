@@ -1,19 +1,31 @@
 from api.actions.ActionsManagerInterface import ActionsManagerInterface
+from api.utilities.utilities import create_dir, get_dir_path
 from api.common.error import *
 from api.actions.CAction import CAction
 from api.actions.JSAction import JSAction
+import logging
+import pickle
+
+_PWD = get_dir_path()
+_ACTIONS_PATH = "{}/virts/actions".format(_PWD)
 
 
 class ActionsManager(ActionsManagerInterface):
 	def __init__(self):
-		self.actions = {}
+		super().__init__()
 		self.load_actions()
 
 	def load_actions(self):
-		pass
+		try:
+			with open("{}/actions.pkl".format(_ACTIONS_PATH), "rb") as f:
+				self.actions = pickle.load(f)
+		except:
+			logging.exception("No actions to load!")
 
 	def save_action(self, vname):
-		pass
+		create_dir(_ACTIONS_PATH)
+		with open("{}/actions.pkl".format(_ACTIONS_PATH), "wb") as f:
+			pickle.dump(self.actions, f)
 
 	def create_action(self, vname, vcode, runtime):
 		if vname in self.actions:
@@ -24,6 +36,7 @@ class ActionsManager(ActionsManagerInterface):
 			act = JSAction()
 		if act.create(vname, vcode) == RC_OK:
 			self.actions[vname] = act
+			self.save_action(vname)
 			return "{} created successfully".format(vname)
 		else:
 			return "Unknown error creating actions"
@@ -56,6 +69,7 @@ class ActionsManager(ActionsManagerInterface):
 	def delete_action(self, vname):
 		if vname in self.actions:
 			del self.actions[vname]
-			return "Action '{}' deleted successfully!"
+			self.save_action(vname)
+			return "Action '{}' deleted successfully!".format(vname)
 		else:
 			raise InvalidActionError(vname)

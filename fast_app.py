@@ -21,6 +21,13 @@ log_filename = "{}/logs/log_{}.log".format(
 format = logging.Formatter(
 	fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='%H:%M:%S')
 
+logging.basicConfig(
+    filename=log_filename,
+    filemode='a+',
+    format='%(asctime)s [%(levelname)s]%(message)s',
+    datefmt='%H:%M:%S',
+    level=logging.DEBUG)
+
 app_config = read_json("{}/config/appConfig.dat".format(_APP_PATH))
 
 port = app_config['port']
@@ -79,6 +86,7 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 		return resp
 		
 	except Exception as e:
+		logging.error(e)
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
@@ -99,6 +107,7 @@ def invoke(vname, args: ArgParam, response: Response):
 		resp = {"result": res}
 		return resp
 	except Exception as e:
+		logging.exception(e)
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
@@ -116,6 +125,7 @@ def get(vname, response: Response):
 		resp = {"result": res}
 		return resp
 	except Exception as e:
+		logging.error(e)
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
@@ -133,6 +143,7 @@ def list(params: PlaygroundParam, response: Response):
 		resp = {"actions": res}
 		return resp
 	except Exception as e:
+		logging.error(e)
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
@@ -150,6 +161,7 @@ def delete(vname, response: Response):
 		resp = {"result": res}
 		return resp
 	except Exception as e:
+		logging.error(e)
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp

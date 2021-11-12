@@ -1,17 +1,11 @@
 from api.actions.ActionInterface import ActionInterface
-from api.utilities.utilities import create_dir, get_dir_path
 from api.common.error import *
 import subprocess
 
 
-_PWD = get_dir_path()
-_TEMP_PATH = "{}/temp".format(_PWD)
-_CODE_PATH = "{}/virts/c".format(_PWD)
-_EXEC_PATH = "{}/virts/exec".format(_PWD)
-
 class BaseAction(ActionInterface):
 	def __init__(self):
-		pass
+		super().__init__()
 
 	def insert_code(self, vcode):
 		pass
@@ -24,7 +18,6 @@ class BaseAction(ActionInterface):
 	
 	def create(self, vname, vcode):
 		self.action_name = vname
-		self.preprocess_action(vname, vcode)
 		self.insert_code(vname, vcode)
 		self.compile_code()
 		return RC_OK

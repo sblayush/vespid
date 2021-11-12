@@ -11,7 +11,7 @@ A simple UI and CLI to interface with Virtines. Currently supported languages ar
 - create
 - get
 - ~~update~~
-- ~~save~~
+- save
 - delete
 - invoke
 - list
@@ -38,9 +38,10 @@ A simple UI and CLI to interface with Virtines. Currently supported languages ar
 ## Todo:
 
 - Multiple language support
-- Map action names to function names
-- Map function signature to key_value pair
-- Save functions in db/fs
+- ~~Map action names to function names~~
+- ~~Map function signature to key_value pair~~
+- ~~Save functions in db/fs~~
+- Remove action contents if deleted
 - Natively call wasp as shared library while passing the path of bin as one of the argument
 - Include dependencies
 - ~~Execute virtines using restful APIs~~

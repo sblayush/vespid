@@ -2,6 +2,7 @@
 
 virts/c/*
 virts/exec/*
+virts/actions/*
 # exception to the rule
 !virts/c/virtine.h
 !virts/exec/.gitkeep

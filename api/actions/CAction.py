@@ -10,8 +10,8 @@ _EXEC_PATH = "{}/virts/exec".format(_PWD)
 
 class CAction(BaseAction):
 	def __init__(self):
+		super().__init__()
 		self.runtime = 'c'
-		self.parameters = {}
 	
 	def update_parameters(self, vcode):
 		inp_params = vcode.split('(')[1].split(')')[0]
@@ -27,6 +27,7 @@ class CAction(BaseAction):
 		self.update_parameters(vcode)
 
 	def insert_code(self, vname, vcode):
+		self.preprocess_action(vname, vcode)
 		vcode = self.update_name(vname, vcode)
 		self.action_code = vcode
 		func_code = None

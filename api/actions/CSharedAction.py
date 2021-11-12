@@ -11,6 +11,7 @@ _EXEC_PATH = "{}/virts/exec".format(_PWD)
 
 class CSharedAction(BaseAction):
 	def __init__(self):
+		super().__init__()
 		self.runtime = 'c'
 	
 
