@@ -1,0 +1,10 @@
+{
+  "port": 8080,
+  "host": "0.0.0.0",
+  "platform": "DEV",
+  "logger": {
+    "active": true,
+    "interval": 1,
+    "path": "/Users/kirtan/iit/CS595-edge/vui/monitor.log"
+  }
+}

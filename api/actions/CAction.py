@@ -8,6 +8,8 @@ _TEMP_PATH = "{}/temp/c/".format(_PWD)
 _CODE_PATH = "{}/virts/c".format(_PWD)
 _EXEC_PATH = "{}/virts/exec".format(_PWD)
 
+VIRTINE_PROC_IDENTIFIER = "virtine"
+
 class CAction(BaseAction):
 	def __init__(self):
 		super().__init__()
@@ -65,12 +67,12 @@ class CAction(BaseAction):
 		subprocess.call(
 			["vcc",
 			"{}/{}/func_{}.c".format(_CODE_PATH, self.action_name, self.action_name),
-			"-o", "{}/{}/{}".format(_EXEC_PATH, self.action_name, self.action_name)])
+			"-o", "{}/{}/{}_{}".format(_EXEC_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)])
 
 	def execute_code(self, vargs):
 		args = [str(_) for _ in list(vargs.values())]
 		p = subprocess.Popen(
-			["{}/{}/{}".format(_EXEC_PATH, self.action_name, self.action_name)]+args,
+			["{}/{}/{}_{}".format(_EXEC_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)]+args,
 			stdout=subprocess.PIPE)
 		out, err = p.communicate()
 		if not err:

@@ -84,7 +84,7 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 		res = AM.create_action(vname, vcode, runtime)
 		resp = {"result": "action '{}' created".format(vname)}
 		return resp
-		
+
 	except Exception as e:
 		logging.error(e)
 		resp = {"msg": str(e)}
@@ -169,9 +169,9 @@ def delete(vname, response: Response):
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-	with open("/home/cc/vui/templates/index.html", 'r') as f:
+	with open(_APP_PATH + "/templates/index.html", 'r') as f:
 		html_content = f.read()
 	return html_content
 
 if __name__ == "__main__":
-	uvicorn.run("fast_app:app", port=port, host=host, reload=rload)
+	uvicorn.run("app:app", port=port, host=host, reload=rload)
