@@ -83,3 +83,5 @@ config/appConfig.dat
 
 # backup files
 # bkp/
+
+docs/

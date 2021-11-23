@@ -862,9 +862,9 @@ function runClicked() {
       console.log('response: ', response)
       console.log('elapsed: ', elapsed)
       let result = response['result']
-      let deploy = response['deployTime']
-      let exec = response['runTime']
-      let network = elapsed - (deploy + exec)
+      let deploy = +parseFloat(response['deployTime']).toFixed(2)
+      let exec = +parseFloat(response['runTime']).toFixed(2)
+      let network = (elapsed - (deploy + exec)).toFixed(2)
 
       if (result.body && result.headers && result.headers['content-type'] == 'image/jpeg') {
         setAreaContents("resultText", '<img src="data:image/png;base64, ' + result.body + '">', false)

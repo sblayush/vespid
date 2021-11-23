@@ -10,7 +10,6 @@ from api.VUIApp.VUIApp import VUIApp
 from api.common.error import *
 
 from datetime import datetime
-import json
 import uvicorn
 import logging
 
@@ -81,8 +80,7 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 			raise MissingArgumentError(vname)
 		vcode = code.vcode
 		runtime = code.runtime
-		res = AM.create_action(vname, vcode, runtime)
-		resp = {"result": "action '{}' created".format(vname)}
+		resp = AM.create_action(vname, vcode, runtime)
 		return resp
 
 	except Exception as e:
@@ -103,8 +101,7 @@ def invoke(vname, args: ArgParam, response: Response):
 		if not vname:
 			raise MissingArgumentError(vname)
 		args = args.vargs
-		res = AM.invoke_action(vname, args)
-		resp = {"result": res}
+		resp = AM.invoke_action(vname, args)
 		return resp
 	except Exception as e:
 		logging.exception(e)

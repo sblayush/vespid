@@ -2,6 +2,8 @@ from api.actions.BaseAction import BaseAction
 from api.utilities.utilities import create_dir, get_dir_path
 from api.common.error import *
 import subprocess
+import time
+
 
 _PWD = get_dir_path()
 _TEMP_PATH = "{}/temp/c/".format(_PWD)
@@ -9,6 +11,7 @@ _CODE_PATH = "{}/virts/c".format(_PWD)
 _EXEC_PATH = "{}/virts/exec".format(_PWD)
 
 VIRTINE_PROC_IDENTIFIER = "virtine"
+
 
 class CAction(BaseAction):
 	def __init__(self):
@@ -22,10 +25,6 @@ class CAction(BaseAction):
 			typ, nam = param.split(' ')
 			self.parameters[nam] = typ
 
-	# def update_name(self, vname, vcode):
-	# 	print("vcode = " + vcode)
-	# 	return vcode.replace("main", vcode)
-
 	def preprocess_action(self, vname, vcode):
 		self.update_parameters(vcode)
 
@@ -35,7 +34,6 @@ class CAction(BaseAction):
 
 	def insert_code(self, vname, vcode):
 		self.preprocess_action(vname, vcode)
-		# vcode = self.update_name(vname, vcode)
 
 		plistdef = "\t";
 		plistargs = "";
@@ -70,12 +68,17 @@ class CAction(BaseAction):
 			"-o", "{}/{}/{}_{}".format(_EXEC_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)])
 
 	def execute_code(self, vargs):
+		start = time.time()
 		args = [str(_) for _ in list(vargs.values())]
 		p = subprocess.Popen(
-			["{}/{}/{}_{}".format(_EXEC_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)]+args,
+			["{}/{}/{}".format(_EXEC_PATH, self.action_name, self.action_name)]+args, 
 			stdout=subprocess.PIPE)
 		out, err = p.communicate()
+		end = time.time()
 		if not err:
-			return out.decode()
+			return {
+				"result": out.decode(),
+				"runTime": (end-start)*1000
+			}
 		else:
 			raise  ActionInvokeError(self.action_name, err.decode())

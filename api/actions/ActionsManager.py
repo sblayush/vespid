@@ -5,6 +5,7 @@ from api.actions.CAction import CAction
 from api.actions.JSAction import JSAction
 import logging
 import pickle
+import time
 
 _PWD = get_dir_path()
 _ACTIONS_PATH = "{}/virts/actions".format(_PWD)
@@ -37,7 +38,12 @@ class ActionsManager(ActionsManagerInterface):
 		if act.create(vname, vcode) == RC_OK:
 			self.actions[vname] = act
 			self.save_action(vname)
-			return "{} created successfully".format(vname)
+			res = {
+				"deployTime": 0,
+				"runTime": 0,
+				"result": "action '{}' created successfully".format(vname)
+			}
+			return res
 		else:
 			return "Unknown error creating actions"
 
@@ -53,9 +59,13 @@ class ActionsManager(ActionsManagerInterface):
 			raise InvalidActionError(vname)
 
 	def invoke_action(self, vname, args):
+		start = time.time()
 		if vname not in self.actions:
 			raise InvalidActionError(vname)
-		return self.actions[vname].invoke(args)
+		res = self.actions[vname].invoke(args)
+		end = time.time()
+		res["deployTime"] = (end-start)*1000 - res["runTime"]
+		return res
 
 	def get_actions_list(self):
 		al = []
