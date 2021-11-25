@@ -30,19 +30,19 @@ class CAction(BaseAction):
 
 	def cli_arg_convert(self, arg, typ):
 		if(typ == "int"):
-			return "atoi(" + arg + ")";
+			return "atoi(" + arg + ")"
 
 	def insert_code(self, vname, vcode):
 		self.preprocess_action(vname, vcode)
 
-		plistdef = "\t";
-		plistargs = "";
+		plistdef = "\t"
+		plistargs = ""
 
-		argc = 1;
+		argc = 1
 		for key in self.parameters:
 			plistdef += self.parameters[key] + " " + key + " = " + self.cli_arg_convert("argv[" + str(argc) + "]", self.parameters[key]) + ";\n\t"
-			plistargs += key + ", ";
-			argc += 1;
+			plistargs += key + ", "
+			argc += 1
 
 		# remove the last semicolon
 		plistargs = plistargs[:-2]
@@ -71,7 +71,7 @@ class CAction(BaseAction):
 		start = time.time()
 		args = [str(_) for _ in list(vargs.values())]
 		p = subprocess.Popen(
-			["{}/{}/{}".format(_EXEC_PATH, self.action_name, self.action_name)]+args, 
+			["{}/{}/{}_{}".format(_EXEC_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)]+args, 
 			stdout=subprocess.PIPE)
 		out, err = p.communicate()
 		end = time.time()

@@ -80,6 +80,7 @@ logs/
 # Local Config File
 config/config.py
 config/appConfig.dat
+config/monConfig.json
 
 # backup files
 # bkp/

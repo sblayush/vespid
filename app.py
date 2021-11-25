@@ -32,6 +32,7 @@ app_config = read_json("{}/config/appConfig.dat".format(_APP_PATH))
 port = app_config['port']
 host = app_config['host']
 rload = app_config['reload']
+n_workers = app_config['n_workers']
 
 app = FastAPI()
 AM = ActionsManager()
@@ -80,6 +81,10 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 			raise MissingArgumentError(vname)
 		vcode = code.vcode
 		runtime = code.runtime
+		if runtime not in {'c', 'js'}:
+			raise InvalidActionError("Unknown runtime: {}".format(runtime))
+		logging.info(
+		"""And: vcode- {}, runtime- {}""".format(vcode, runtime))
 		resp = AM.create_action(vname, vcode, runtime)
 		return resp
 
@@ -88,7 +93,6 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
-
 
 @app.post("/actions/{vname}/invoke")
 def invoke(vname, args: ArgParam, response: Response):
@@ -101,6 +105,8 @@ def invoke(vname, args: ArgParam, response: Response):
 		if not vname:
 			raise MissingArgumentError(vname)
 		args = args.vargs
+		logging.info(
+		"""And: args- {}""".format(args))
 		resp = AM.invoke_action(vname, args)
 		return resp
 	except Exception as e:
@@ -171,4 +177,4 @@ def home(request: Request):
 	return html_content
 
 if __name__ == "__main__":
-	uvicorn.run("app:app", port=port, host=host, reload=rload)
+	uvicorn.run("app:app", port=port, host=host, reload=rload, workers=n_workers)

@@ -35,17 +35,21 @@ class ActionsManager(ActionsManagerInterface):
 			act = CAction()
 		else:
 			act = JSAction()
-		if act.create(vname, vcode) == RC_OK:
-			self.actions[vname] = act
-			self.save_action(vname)
-			res = {
-				"deployTime": 0,
-				"runTime": 0,
-				"result": "action '{}' created successfully".format(vname)
-			}
-			return res
-		else:
-			return "Unknown error creating actions"
+		try:
+			if act.create(vname, vcode) == RC_OK:
+				self.actions[vname] = act
+				self.save_action(vname)
+				res = {
+					"deployTime": 0,
+					"runTime": 0,
+					"result": "action '{}' created successfully".format(vname)
+				}
+				return res
+			else:
+				raise MissingArgumentError("Unknown error creating actions")
+		except Exception as e:
+			logging.exception(Unknown error creating actions)
+			raise MissingArgumentError("Unknown error creating actions")
 
 	def get_action(self, vname):
 		if vname in self.actions:

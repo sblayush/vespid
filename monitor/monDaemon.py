@@ -17,6 +17,7 @@ class VirtMonitor:
       if proc.name().find(VIRTINE_PROC_IDENTIFIER) == -1:
         continue
 
+      print("Found a virting process ", proc.pid)
       virt_running_dir[proc.pid] = { "name": proc.name(), \
       "pid": proc.pid, "cpu_times": proc.cpu_times(), "cpu_percent": proc.cpu_percent(), \
       "status": proc.status(), "memory_info": memory_info() }
@@ -35,7 +36,6 @@ class VirtMonitor:
       return
 
     while True:
-      print("monitor")
       virt_running_dir = self.get_virt_processes()
       self.dump_to_logfile(virt_running_dir)
       time.sleep(self.interval)

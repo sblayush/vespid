@@ -2,5 +2,6 @@
     "port": 8989,
     "host": "0.0.0.0",
 	"platform": "DEV",
-    "reload": true
+    "reload": true,
+    "n_workers": 64
 }
