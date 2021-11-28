@@ -118,6 +118,15 @@ function main(array $args) : array {
         example: `int add(int a, int b){
   return a+b;
 }`
+    },
+
+    cnative: {
+        name: 'cnative',
+        editMode: 'ace/mode/c_cpp',
+        kind: `cnative`,
+        example: `int add(int a, int b){
+  return a+b;
+}`
     }
   }
 
@@ -246,7 +255,7 @@ function initializeLanguage() {
   selector.options.length = 0 // probably unneeded but just in case this gets done more than once
   for (member in window.languages) {
     let languageName = window.languages[member].name
-    if (languageName == "JavaScript" || languageName == "c"){
+    if (languageName == "JavaScript" || languageName == "c" || languageName == "cnative"){
       console.log("Adding language " + languageName + " to selector")
       selector.options[selector.options.length] = new Option(languageName, languageName)
     }

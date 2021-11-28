@@ -81,7 +81,7 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 			raise MissingArgumentError(vname)
 		vcode = code.vcode
 		runtime = code.runtime
-		if runtime not in {'c', 'js'}:
+		if runtime not in {'c', 'js', 'cnative'}:
 			raise InvalidActionError("Unknown runtime: {}".format(runtime))
 		logging.info(
 		"""And: vcode- {}, runtime- {}""".format(vcode, runtime))

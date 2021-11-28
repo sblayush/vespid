@@ -1,7 +1,7 @@
 [bits 16]
 [section .text]
 extern __stack_base
-extern virt
+extern fib3
 extern __heap_start
 
 MSR_EFER equ 0xC0000080
@@ -94,7 +94,7 @@ _start:
 
 	mov rdi, 0
 	mov rdi, [rdi]
-	call virt
+	call fib3
 
 	out 0xFA, ax ;; call the exit hypercall
 

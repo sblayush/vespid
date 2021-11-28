@@ -2,6 +2,7 @@ from api.actions.ActionsManagerInterface import ActionsManagerInterface
 from api.utilities.utilities import create_dir, get_dir_path
 from api.common.error import *
 from api.actions.CAction import CAction
+from api.actions.CNativeAction import CNativeAction
 from api.actions.JSAction import JSAction
 import logging
 import pickle
@@ -33,6 +34,8 @@ class ActionsManager(ActionsManagerInterface):
 			raise ActionAlreadyExists(vname)
 		if runtime == 'c':
 			act = CAction()
+		elif runtime == 'cnative':
+			act = CNativeAction()
 		else:
 			act = JSAction()
 		try:
@@ -48,7 +51,7 @@ class ActionsManager(ActionsManagerInterface):
 			else:
 				raise MissingArgumentError("Unknown error creating actions")
 		except Exception as e:
-			logging.exception(Unknown error creating actions)
+			logging.exception("Unknown error creating actions")
 			raise MissingArgumentError("Unknown error creating actions")
 
 	def get_action(self, vname):

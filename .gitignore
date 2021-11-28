@@ -79,6 +79,7 @@ logs/
 
 # Local Config File
 config/config.py
+config/paths.py
 config/appConfig.dat
 config/monConfig.json
 

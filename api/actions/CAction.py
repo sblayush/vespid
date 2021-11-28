@@ -6,9 +6,9 @@ import time
 
 
 _PWD = get_dir_path()
-_TEMP_PATH = "{}/temp/c/".format(_PWD)
+_TEMP_PATH = "{}/temp/c".format(_PWD)
 _CODE_PATH = "{}/virts/c".format(_PWD)
-_EXEC_PATH = "{}/virts/exec".format(_PWD)
+_EXEC_PATH = "{}/virts/c".format(_PWD)
 
 VIRTINE_PROC_IDENTIFIER = "virtine"
 
@@ -57,15 +57,15 @@ class CAction(BaseAction):
 		func_code = func_code.replace("####plistargs####", plistargs)
 
 		create_dir("{}/{}/".format(_CODE_PATH, self.action_name))
-		create_dir("{}/{}/".format(_EXEC_PATH, self.action_name))
-		with open("{}/{}/func_{}.c".format(_CODE_PATH, self.action_name, self.action_name), 'w') as f:
+		with open("{}/{}/{}.c".format(_CODE_PATH, self.action_name, self.action_name), 'w') as f:
 			f.write(func_code)
 
 	def compile_code(self):
+		create_dir("{}/{}/".format(_EXEC_PATH, self.action_name))
 		subprocess.call(
 			["vcc",
-			"{}/{}/func_{}.c".format(_CODE_PATH, self.action_name, self.action_name),
-			"-o", "{}/{}/{}_{}".format(_EXEC_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)])
+			"{}/{}/{}.c".format(_CODE_PATH, self.action_name, self.action_name),
+			"-o", "{}/{}/{}_{}".format(_CODE_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)])
 
 	def execute_code(self, vargs):
 		start = time.time()
