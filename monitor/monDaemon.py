@@ -18,7 +18,7 @@ class VirtMonitor:
         continue
 
       virt_running_dir[proc.pid] = { "ts": round(time.time() * 1000), "name": proc.name(), \
-      "pid": proc.pid, "cpu_times": proc.cpu_times(), "cpu_percent": proc.cpu_percent(), \
+      "pid": str(proc.pid), "cpu_times": str(proc.cpu_times()), "cpu_percent": str(proc.cpu_percent()), \
       "status": proc.status(), "memory_info": proc.memory_info() }
 
     return virt_running_dir
@@ -28,12 +28,12 @@ class VirtMonitor:
 
     f.write("pid" + LOG_DELIMITER + "name" + LOG_DELIMITER + "ts" \
       + LOG_DELIMITER + "cpu_times" + LOG_DELIMITER + "cpu_percent" \
-      + LOG_DELIMITER + "status" + LOG_DELIMITER + "memory_info" "\n")
+      + LOG_DELIMITER + "status" + LOG_DELIMITER + "memory_info" + "\n")
 
     for pid in vrd:
-      f.write(str(pid) + LOG_DELIMITER + vrd[pid]["name"] + LOG_DELIMITER + vrd[pid]["ts"] \
+      f.write(vrd[pid]["pid"] + LOG_DELIMITER + vrd[pid]["name"] + LOG_DELIMITER + vrd[pid]["ts"] \
       + LOG_DELIMITER + vrd[pid]["cpu_times"] + LOG_DELIMITER + vrd[pid]["cpu_percent"] \
-      + LOG_DELIMITER + vrd[pid]["status"] + LOG_DELIMITER + vrd[pid]["memory_info"] "\n")
+      + LOG_DELIMITER + vrd[pid]["status"] + LOG_DELIMITER + vrd[pid]["memory_info"] + "\n")
     f.close()
 
   def start_monitor(self):
@@ -44,7 +44,7 @@ class VirtMonitor:
     while True:
       virt_running_dir = self.get_virt_processes()
 
-      if key in self.dump_to_logfile.keys()
+      if len(virt_running_dir):
         self.dump_to_logfile(virt_running_dir)
 
       time.sleep(self.interval)
