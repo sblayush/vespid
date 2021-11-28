@@ -17,9 +17,9 @@ class VirtMonitor:
       if proc.name().find(VIRTINE_PROC_IDENTIFIER) == -1:
         continue
 
-      virt_running_dir[proc.pid] = { "ts": round(time.time() * 1000), "name": proc.name(), \
+      virt_running_dir[proc.pid] = { "ts": str(round(time.time() * 1000)), "name": proc.name(), \
       "pid": str(proc.pid), "cpu_times": str(proc.cpu_times()), "cpu_percent": str(proc.cpu_percent()), \
-      "status": proc.status(), "memory_info": proc.memory_info() }
+      "status": proc.status(), "memory_info": str(proc.memory_info()) }
 
     return virt_running_dir
 
