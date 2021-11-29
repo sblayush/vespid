@@ -80,14 +80,11 @@ class CNativeAction(BaseAction):
 
 	def call_bin(self, args):
     class virt_buff(ctypes.Structure):
-	    # _fields_ = [("x", ctypes.c_int)]
-	    # _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int)]
 	    _fields_ = []
 	    var_name = "a"
 	    for a in args:
         _fields_.append((var_name, ctypes.c_int))
         var_name = chr(ord(var_name) + 1)
-
 	    _fields_.append(("ret", ctypes.c_int))
 
 		libname = wasp_shared_ob_path
