@@ -79,30 +79,28 @@ class CNativeAction(BaseAction):
 		subprocess.call(["make", "-C", "{}/{}".format(_CODE_PATH, self.action_name)])
 
 	def call_bin(self, args):
-    class virt_buff(ctypes.Structure):
-	    _fields_ = []
-	    var_name = "a"
-	    for a in args:
-        _fields_.append((var_name, ctypes.c_int))
-        var_name = chr(ord(var_name) + 1)
-	    _fields_.append(("ret", ctypes.c_int))
+		class virt_buff(ctypes.Structure):
+			_fields_ = []
+			var_name = "a"
+			for a in args:
+				_fields_.append((var_name, ctypes.c_int))
+				var_name = chr(ord(var_name) + 1)
+
+			_fields_.append(("ret", ctypes.c_int))
 
 		libname = wasp_shared_ob_path
 		print(libname)
 		c_lib = ctypes.CDLL(libname)
-		virt_param = virt_buff(int(args[0]),3)
 
-		var_name = "a"
-    for a in args:
-    	print("var_name", var_name, ", arg", a)
-    	virt_param[var_name] = a
-      var_name = chr(ord(var_name) + 1)
+		eval_str = "virt_buff("
+		for a in args:
+			eval_str = eval_str + str(a) + ","
 
-		n = ctypes.c_int(5)
+		eval_str += "0)"
+		virt_param = eval(eval_str)
+
 		bin_path = "{}/{}/build/{}.bin".format(_CODE_PATH, self.action_name, self.action_name)
 
-
-		#c_lib.wasp_native_test()
 		with open(bin_path, mode='rb') as file: # b is important -> binary
 			binary = file.read()
 			file.seek(0, os.SEEK_END)
