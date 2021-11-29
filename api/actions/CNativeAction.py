@@ -79,36 +79,38 @@ class CNativeAction(BaseAction):
 		subprocess.call(["make", "-C", "{}/{}".format(_CODE_PATH, self.action_name)])
 
 	def call_bin(self, args):
-		class virt_buff(ctypes.Structure):
-			# _fields_ = [("x", ctypes.c_int)]
-			# _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int)]
-			_fields_ = []
+    class virt_buff(ctypes.Structure):
+	    # _fields_ = [("x", ctypes.c_int)]
+	    # _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int)]
+	    _fields_ = []
+	    var_name = "a"
+	    for a in args:
+        _fields_.append((var_name, ctypes.c_int))
+        var_name = chr(ord(var_name) + 1)
 
-    # supports only 26 parameters for now
-		var_name = "a"
-		for a in args:
-			_fields_.append((var_name, ctypes.c_int))
-			var_name = chr(ord(var_name) + 1)
-
-  	# appending the return value field
-		_fields_.append(("ret", ctypes.c_int))
+	    _fields_.append(("ret", ctypes.c_int))
 
 		libname = wasp_shared_ob_path
 		print(libname)
 		c_lib = ctypes.CDLL(libname)
 		virt_param = virt_buff(int(args[0]),3)
 
+		var_name = "a"
+    for a in args:
+    	print("var_name", var_name, ", arg", a)
+    	virt_param[var_name] = a
+      var_name = chr(ord(var_name) + 1)
+
 		n = ctypes.c_int(5)
 		bin_path = "{}/{}/build/{}.bin".format(_CODE_PATH, self.action_name, self.action_name)
+
 
 		#c_lib.wasp_native_test()
 		with open(bin_path, mode='rb') as file: # b is important -> binary
 			binary = file.read()
 			file.seek(0, os.SEEK_END)
-			# wasp_run_virtine((const char *)bin, sz, 0x9000 + (sz & ~0xFFF), (void*)&n, sizeof(n), NULL);
 			c_lib.wasp_run_virtine(binary, file.tell(), 0x9000 + (file.tell() & ~0xFFF), ctypes.byref(virt_param), 16, None)
-			print(virt_param.x, virt_param.y)
-			return virt_param.y
+			return virt_param.ret
 
 	def execute_code(self, vargs):
 		try:
