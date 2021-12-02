@@ -12,6 +12,7 @@ from api.common.error import *
 from datetime import datetime
 import uvicorn
 import logging
+import json
 
 _APP_PATH = get_dir_path()
 create_dir("{}/logs".format(_APP_PATH))
@@ -25,7 +26,7 @@ logging.basicConfig(
     filemode='a+',
     format='%(asctime)s [%(levelname)s]%(message)s',
     datefmt='%H:%M:%S',
-    level=logging.DEBUG)
+    level=logging.CRITICAL)
 
 app_config = read_json("{}/config/appConfig.dat".format(_APP_PATH))
 

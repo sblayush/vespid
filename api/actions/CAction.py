@@ -1,7 +1,8 @@
 from api.actions.BaseAction import BaseAction
-from api.utilities.utilities import create_dir, get_dir_path
+from api.utilities.utilities import create_dir, get_dir_path, does_dir_exist
 from api.common.error import *
 import subprocess
+import logging
 import time
 
 
@@ -62,11 +63,20 @@ class CAction(BaseAction):
 
 	def compile_code(self):
 		create_dir("{}/{}/".format(_EXEC_PATH, self.action_name))
-		subprocess.call(
+		op_file = "{}/{}/{}_{}".format(_CODE_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)
+		p = subprocess.Popen(
 			["vcc",
 			"{}/{}/{}.c".format(_CODE_PATH, self.action_name, self.action_name),
-			"-o", "{}/{}/{}_{}".format(_CODE_PATH, self.action_name, VIRTINE_PROC_IDENTIFIER, self.action_name)])
-
+			"-o", op_file],
+			stdout=subprocess.PIPE)
+		out, err = p.communicate()
+		out = out.decode()
+		end = time.time()
+		
+		if err or "warning:" in out or "error" in out or not does_dir_exist(op_file):
+			raise ActionCompileError(self.action_name)
+		return RC_OK
+		
 	def execute_code(self, vargs):
 		start = time.time()
 		args = [str(_) for _ in list(vargs.values())]
@@ -75,6 +85,7 @@ class CAction(BaseAction):
 			stdout=subprocess.PIPE)
 		out, err = p.communicate()
 		end = time.time()
+		logging.log(logging.CRITICAL, "exec_c: "+str((end-start)*1000))
 		if not err:
 			return {
 				"result": out.decode(),

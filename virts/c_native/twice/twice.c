@@ -2,7 +2,8 @@
 #pragma GCC optimize ("O0")
 
 int twice(int a){
-  return a*2;
+  int b = a*2;
+  return b;
 }
 
 #pragma GCC pop_options

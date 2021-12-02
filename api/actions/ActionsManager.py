@@ -49,10 +49,10 @@ class ActionsManager(ActionsManagerInterface):
 				}
 				return res
 			else:
-				raise MissingArgumentError("Unknown error creating actions")
+				raise ActionCompileError("Unknown error creating actions")
 		except Exception as e:
 			logging.exception("Unknown error creating actions")
-			raise MissingArgumentError("Unknown error creating actions")
+			raise ActionCompileError("Unknown error creating actions")
 
 	def get_action(self, vname):
 		if vname in self.actions:
@@ -69,6 +69,9 @@ class ActionsManager(ActionsManagerInterface):
 		start = time.time()
 		if vname not in self.actions:
 			raise InvalidActionError(vname)
+		act = self.actions[vname]
+		if len(args) != len(act.parameters):
+			raise InvalidSignatureError(vname)
 		res = self.actions[vname].invoke(args)
 		end = time.time()
 		res["deployTime"] = (end-start)*1000 - res["runTime"]

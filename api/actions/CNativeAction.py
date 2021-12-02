@@ -1,8 +1,9 @@
 from api.actions.BaseAction import BaseAction
-from api.utilities.utilities import create_dir, get_dir_path
+from api.utilities.utilities import create_dir, get_dir_path, does_dir_exist
 from config.paths import wasp_shared_ob_path
 from api.common.error import *
 import subprocess
+import logging
 import time
 import ctypes
 import os
@@ -77,9 +78,15 @@ class CNativeAction(BaseAction):
 	def compile_code(self):
 		create_dir("{}/{}/".format(_BIN_PATH, self.action_name))
 		subprocess.call(["make", "-C", "{}/{}".format(_CODE_PATH, self.action_name)])
+		
+		bin_path = "{}/{}/build/{}.bin".format(_CODE_PATH, self.action_name, self.action_name)
+		if not does_dir_exist(bin_path):
+			raise ActionCompileError(self.action_name)
+		return RC_OK
 
 	def call_bin(self, args):
 		class virt_buff(ctypes.Structure):
+			# _fields_ = [("argc", ctypes.c_int)]
 			_fields_ = []
 			var_name = "a"
 			for a in args:
@@ -89,33 +96,41 @@ class CNativeAction(BaseAction):
 			_fields_.append(("ret", ctypes.c_int))
 
 		libname = wasp_shared_ob_path
-		print(libname)
+		# print(self.action_name, self.parameters)
 		c_lib = ctypes.CDLL(libname)
 
 		eval_str = "virt_buff("
+		# eval_str += str(len(args)) + ","
 		for a in args:
 			eval_str = eval_str + str(a) + ","
 
 		eval_str += "0)"
+		# print("eval_str", eval_str)
 		virt_param = eval(eval_str)
+		# print("virt_param.a", virt_param.a)
 
 		bin_path = "{}/{}/build/{}.bin".format(_CODE_PATH, self.action_name, self.action_name)
 
 		with open(bin_path, mode='rb') as file: # b is important -> binary
 			binary = file.read()
 			file.seek(0, os.SEEK_END)
-			c_lib.wasp_run_virtine(binary, file.tell(), 0x9000 + (file.tell() & ~0xFFF), ctypes.byref(virt_param), 16, None)
-			return virt_param.ret
+			file_sz = file.tell()
+			# hackey way to generate a unique cache
+			key = 0x9000 + (abs(hash(self.action_name+self.action_code)) % 100)*4096
+			# print("key=", key)
+			start = time.time()
+			c_lib.wasp_run_virtine(binary, file_sz, key + (file_sz & ~0xFFF), ctypes.byref(virt_param), (len(self.parameters)+1)*4, None)
+			end = time.time()
+			logging.log(logging.CRITICAL, "exec_native: "+str((end-start)*1000))
+			return virt_param.ret, (end-start)*1000
 
 	def execute_code(self, vargs):
 		try:
-			start = time.time()
 			args = [str(_) for _ in list(vargs.values())]
-			res = self.call_bin(args)
-			end = time.time()
+			res, exectime = self.call_bin(args)
 			return {
 				"result": res,
-				"runTime": (end-start)*1000
+				"runTime": exectime
 			}
 		except:
 			raise  ActionInvokeError(self.action_name, err.decode())

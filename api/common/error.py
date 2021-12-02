@@ -23,8 +23,22 @@ class MissingArgumentError(Exception):
 
 
 class ActionInvokeError(Exception):
-	"""ActionInvokeError: Missing Argument"""
+	"""ActionInvokeError"""
 	def __init__(self, vname, err):
-		super().__init__("ActionInvokeError: Error in invoking action: {}".format(vname, err))
+		super().__init__("ActionInvokeError: Error in invoking action {}: {}".format(vname, err))
+		self.status = 500
+
+
+class ActionCompileError(Exception):
+	"""ActionCompileError"""
+	def __init__(self, vname):
+		super().__init__("ActionCompileError: Error in compiling action {}".format(vname))
+		self.status = 500
+
+
+class InvalidSignatureError(Exception):
+	"""InvalidSignatureError: Argument Mismatch"""
+	def __init__(self, vname):
+		super().__init__("InvalidSignatureError: Mismatch in arguments for action {}".format(vname))
 		self.status = 500
 

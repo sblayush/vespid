@@ -87,3 +87,7 @@ config/monConfig.json
 # bkp/
 
 docs/
+
+nohup.out
+temp/c_native/boot_.asm
+virts/c_native/*
