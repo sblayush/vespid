@@ -105,9 +105,10 @@ class CNativeAction(BaseAction):
 			eval_str = eval_str + str(a) + ","
 
 		eval_str += "0)"
-		# print("eval_str", eval_str)
-		virt_param = eval(eval_str)
-		# print("virt_param.a", virt_param.a)
+		try:
+			virt_param = eval(eval_str)
+		except:
+			raise  ActionInvokeError(self.action_name, err.decode())
 
 		bin_path = "{}/{}/build/{}.bin".format(_CODE_PATH, self.action_name, self.action_name)
 
