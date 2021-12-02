@@ -10,9 +10,9 @@ from api.VUIApp.VUIApp import VUIApp
 from api.common.error import *
 
 from datetime import datetime
-import json
 import uvicorn
 import logging
+import json
 
 _APP_PATH = get_dir_path()
 create_dir("{}/logs".format(_APP_PATH))
@@ -26,13 +26,14 @@ logging.basicConfig(
     filemode='a+',
     format='%(asctime)s [%(levelname)s]%(message)s',
     datefmt='%H:%M:%S',
-    level=logging.DEBUG)
+    level=logging.CRITICAL)
 
 app_config = read_json("{}/config/appConfig.dat".format(_APP_PATH))
 
 port = app_config['port']
 host = app_config['host']
 rload = app_config['reload']
+n_workers = app_config['n_workers']
 
 app = FastAPI()
 AM = ActionsManager()
@@ -81,16 +82,18 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 			raise MissingArgumentError(vname)
 		vcode = code.vcode
 		runtime = code.runtime
-		res = AM.create_action(vname, vcode, runtime)
-		resp = {"result": "action '{}' created".format(vname)}
+		if runtime not in {'c', 'js', 'cnative'}:
+			raise InvalidActionError("Unknown runtime: {}".format(runtime))
+		logging.info(
+		"""And: vcode- {}, runtime- {}""".format(vcode, runtime))
+		resp = AM.create_action(vname, vcode, runtime)
 		return resp
-		
+
 	except Exception as e:
 		logging.error(e)
 		resp = {"msg": str(e)}
 		response.status_code = e.status
 		return resp
-
 
 @app.post("/actions/{vname}/invoke")
 def invoke(vname, args: ArgParam, response: Response):
@@ -103,8 +106,9 @@ def invoke(vname, args: ArgParam, response: Response):
 		if not vname:
 			raise MissingArgumentError(vname)
 		args = args.vargs
-		res = AM.invoke_action(vname, args)
-		resp = {"result": res}
+		logging.info(
+		"""And: args- {}""".format(args))
+		resp = AM.invoke_action(vname, args)
 		return resp
 	except Exception as e:
 		logging.exception(e)
@@ -169,9 +173,9 @@ def delete(vname, response: Response):
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-	with open("/home/cc/vui/templates/index.html", 'r') as f:
+	with open(_APP_PATH + "/templates/index.html", 'r') as f:
 		html_content = f.read()
 	return html_content
 
 if __name__ == "__main__":
-	uvicorn.run("fast_app:app", port=port, host=host, reload=rload)
+	uvicorn.run("app:app", port=port, host=host, reload=rload, workers=n_workers)

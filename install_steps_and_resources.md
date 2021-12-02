@@ -86,6 +86,10 @@ https://apt.llvm.org/
 ```
 
 
+### Steps to install locust
+```
+--
+```
 
 
 ## OLD

@@ -7,7 +7,7 @@ class BaseAction(ActionInterface):
 	def __init__(self):
 		super().__init__()
 
-	def insert_code(self, vcode):
+	def insert_code(self, vname, vcode):
 		pass
 
 	def compile_code(self):

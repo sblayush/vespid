@@ -1,0 +1,10 @@
+{
+  "port": 8081,
+  "host": "0.0.0.0",
+  "platform": "DEV",
+  "logger": {
+    "active": true,
+    "interval": 1,
+    "path": "/home/cc/vui/monitor.log"
+  }
+}

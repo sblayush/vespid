@@ -16,8 +16,7 @@ virtine ####vcode####
 
 
 int main(int argc, char **argv) {
-	int arg1 = atoi(argv[1]);
-	int arg2 = atoi(argv[2]);
-	int res = ####vname####(arg1, arg2);
+####plistdef####
+	int res = ####vname####(####plistargs####);
 	printf("%d", res);
 }

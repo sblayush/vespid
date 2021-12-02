@@ -118,6 +118,15 @@ function main(array $args) : array {
         example: `int add(int a, int b){
   return a+b;
 }`
+    },
+
+    cnative: {
+        name: 'cnative',
+        editMode: 'ace/mode/c_cpp',
+        kind: `cnative`,
+        example: `int add(int a, int b){
+  return a+b;
+}`
     }
   }
 
@@ -246,7 +255,7 @@ function initializeLanguage() {
   selector.options.length = 0 // probably unneeded but just in case this gets done more than once
   for (member in window.languages) {
     let languageName = window.languages[member].name
-    if (languageName == "JavaScript" || languageName == "c"){
+    if (languageName == "JavaScript" || languageName == "c" || languageName == "cnative"){
       console.log("Adding language " + languageName + " to selector")
       selector.options[selector.options.length] = new Option(languageName, languageName)
     }
@@ -455,6 +464,9 @@ function getCode(vname) {
        if ('result' in response) {
          console.log("Code retrieved from deployed action")
            let code = response.result.vcode
+           
+          let params = get_parameters(code)
+          elem("input").value = JSON.stringify(params, null, 4)
            window.editor.setValue(code)
            editorContentsChanged = false // Setting the editor contents will fire the change event but there is no need to re-save.
        } else {
@@ -701,7 +713,7 @@ function get_parameters(vcode){
     let nam = param[1]
     parameters[nam] = ""
     if (typ == "int")
-      parameters[nam] = 1
+      parameters[nam] = Math.floor(Math.random() * 25)
   }
   return parameters
 }
@@ -734,7 +746,7 @@ function createClicked() {
       let inx = msg.indexOf("\n")
       let usermsg = inx > 0 ? msg.substring(0, inx) : msg
       console.log("Error response: " + msg)
-      setAreaContents("resultText", usermsg, true)
+      setAreaContents("resultText", eval(usermsg), true)
       setAreaContents("timingText", "", false)
     } else {
       console.log('response: ', response)
@@ -862,14 +874,14 @@ function runClicked() {
       console.log('response: ', response)
       console.log('elapsed: ', elapsed)
       let result = response['result']
-      let deploy = response['deployTime']
-      let exec = response['runTime']
-      let network = elapsed - (deploy + exec)
+      let deploy = +parseFloat(response['deployTime']).toFixed(2)
+      let exec = +parseFloat(response['runTime']).toFixed(2)
+      let network = (elapsed - (deploy + exec)).toFixed(2)
 
       if (result.body && result.headers && result.headers['content-type'] == 'image/jpeg') {
         setAreaContents("resultText", '<img src="data:image/png;base64, ' + result.body + '">', false)
       } else {
-        setAreaContents("resultText", JSON.stringify(result, null, 4), false)
+        setAreaContents("resultText", eval(result), false)
       }
 
       let timingStr = "Network: " + network + " ms<br>Deploy: " + deploy + " ms<br>Exec: " + exec + " ms"

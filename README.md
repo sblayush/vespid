@@ -1,8 +1,8 @@
 # vui
 
-## Virtines frontend
+## Vespid User Interface
 
-A simple UI and CLI to interface with Virtines. Currently supported languages are c and ~~js~~.
+A UI and CLI framework to interface with Virtines. Currently supported languages are c ~~and js~~.
 
 
 ## Available functions:
@@ -17,18 +17,18 @@ A simple UI and CLI to interface with Virtines. Currently supported languages ar
 - list
 
 ### moitoring/telemetry:
-- ~~CPU usage~~
-- ~~usage memory~~
+- CPU usage
+- Memory usage
 - ~~number of instances (warm, cold)~~
 - ~~Cold start time~~
-- ~~Execution time~~
+- Execution time
 - ~~invocation traces~~
 
 ### testing:
-- ~~workload generator~~
+- workload generator using locust
 
 ### logging:
-- ~~invocations~~
+- invocations
 - ~~misses~~
 
 ### trigger:
@@ -53,17 +53,17 @@ A simple UI and CLI to interface with Virtines. Currently supported languages ar
 
 
 Steps to start the Server:
-```python3 fast_app.py```
+```python3 app.py```
 
 To view webpage:
-```host:8989/```
+```host:8988/```
 
 To view swagger documentation:
-```host:8989/docs```
+```host:8988/docs```
 
 ## *Notes
 
-- By default running on port 8989
+- By default running on port 8988
 - Interfaces to support multiple languages implemented
 - Need to look into CLI
 - Steps to install virtines [here](install_steps_and_resources.md)
@@ -72,4 +72,3 @@ To view swagger documentation:
 
 - https://arxiv.org/abs/2104.11324
 - https://apt.llvm.org/
-
