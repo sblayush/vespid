@@ -118,12 +118,12 @@ class Mix(TaskSet):
 
 
 class FibTest(TaskSet):
-	wait_time = between(10, 10)
+	wait_time = constant_throughput(1)
 
 	@task(10)
 	def scenario_invoke_fib_cn(self):
 		somedata = {
-			"vargs": {"a":48}
+			"vargs": {"a":10}
 			}
 		with self.client.post("/actions/fib_cn/invoke", json=somedata) as resp:
 			assert resp.status_code == 200
@@ -131,12 +131,12 @@ class FibTest(TaskSet):
 	@task(10)
 	def scenario_invoke_fib_c(self):
 		somedata = {
-			"vargs": {"a":48}
+			"vargs": {"a":10}
 			}
 		with self.client.post("/actions/fib_c/invoke", json=somedata) as resp:
 			assert resp.status_code == 200
 
-	@task(5)
+	@task(10)
 	def scenario_invoke_ping(self):
 		with self.client.get("/ping", catch_response=True) as response:
 			assert response.text != "pong"
