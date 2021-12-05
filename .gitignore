@@ -91,3 +91,8 @@ docs/
 nohup.out
 temp/c_native/boot_.asm
 virts/c_native/*
+
+# tests
+/test_data/test?/test?
+
+/workload_generator/locust/test*/*
