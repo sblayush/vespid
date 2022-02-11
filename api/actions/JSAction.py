@@ -4,8 +4,7 @@ import subprocess
 
 _PWD = get_dir_path()
 _TEMP_PATH = "{}/temp".format(_PWD)
-_CODE_PATH = "{}/virts/c".format(_PWD)
-_EXEC_PATH = "{}/virts/exec".format(_PWD)
+_CODE_PATH = "{}/virts/js".format(_PWD)
 
 class JSAction(BaseAction):
 	def __init__(self):
@@ -13,16 +12,10 @@ class JSAction(BaseAction):
 	
 
 	def insert_code(self, vcode):
-		self.action_code = vcode
-		func_code = None
-		with open("{}/func_temp.c".format(_TEMP_PATH), 'r') as f:
-			func_code = f.read()
-		func_code = func_code.replace("####vcode####", vcode)
-		func_code = func_code.replace("####vname####", self.action_name)
 		create_dir("{}/{}/".format(_CODE_PATH, self.action_name))
 		create_dir("{}/{}/".format(_EXEC_PATH, self.action_name))
-		with open("{}/{}/func_{}.c".format(_CODE_PATH, self.action_name, self.action_name), 'w') as f:
-			f.write(func_code)
+		with open("{}/{}/func_{}.js".format(_CODE_PATH, self.action_name, self.action_name), 'w') as f:
+			f.write(vcode)
 
 	def compile_code(self):
 		subprocess.call(

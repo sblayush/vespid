@@ -2,8 +2,7 @@
 #pragma GCC optimize ("O0")
 
 int add(int a, int b){
-  int c = a*3+b;
-  return c;
+  return a+b;
 }
 
 #pragma GCC pop_options
