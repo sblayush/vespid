@@ -40,7 +40,7 @@ $(document).ready(function(){
     JavaScript: {
         name: "JavaScript",
         editMode: "ace/mode/javascript",
-        kind: "nodejs",
+        kind: "js",
         example:`function main(args) {
     let name = args.name || 'stranger'
     let greeting = 'Hello ' + name + '!'
@@ -114,7 +114,7 @@ function main(array $args) : array {
     c: {
         name: 'c',
         editMode: 'ace/mode/c_cpp',
-        kind: `c`,
+        kind: 'c',
         example: `int add(int a, int b){
   return a+b;
 }`
@@ -731,6 +731,7 @@ function createClicked() {
     let t0 = new Date().getTime()
     let inputStr = elem("input").value
     let arg = { vcode : contents, runtime: window.language.kind }
+    console.log(arg);
     let vname = window.currentAction
 
     if (get_action_name(contents)!=vname){

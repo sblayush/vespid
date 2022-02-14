@@ -3,6 +3,8 @@
 virts/c/*
 virts/exec/*
 virts/actions/*
+virts/js/*
+rough/*
 # exception to the rule
 !virts/c/virtine.h
 !virts/exec/.gitkeep

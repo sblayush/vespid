@@ -36,6 +36,8 @@ class ActionsManager(ActionsManagerInterface):
 			act = CAction()
 		elif runtime == 'cnative':
 			act = CNativeAction()
+		elif runtime == 'js':
+			act = JSAction()
 		else:
 			act = JSAction()
 		try:
