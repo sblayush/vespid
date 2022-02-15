@@ -4,6 +4,7 @@ virts/c/*
 virts/exec/*
 virts/actions/*
 virts/js/*
+virts/js_native/*
 rough/*
 # exception to the rule
 !virts/c/virtine.h

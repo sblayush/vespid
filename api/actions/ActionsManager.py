@@ -4,6 +4,7 @@ from api.common.error import *
 from api.actions.CAction import CAction
 from api.actions.CNativeAction import CNativeAction
 from api.actions.JSAction import JSAction
+from api.actions.JSNativeAction import JSNativeAction
 import logging
 import pickle
 import time
@@ -38,6 +39,8 @@ class ActionsManager(ActionsManagerInterface):
 			act = CNativeAction()
 		elif runtime == 'js':
 			act = JSAction()
+		elif runtime == 'jsnative':
+			act = JSNativeAction()
 		else:
 			act = JSAction()
 		try:
