@@ -888,7 +888,7 @@ function runClicked() {
       if (result.body && result.headers && result.headers['content-type'] == 'image/jpeg') {
         setAreaContents("resultText", '<img src="data:image/png;base64, ' + result.body + '">', false)
       } else {
-        setAreaContents("resultText", eval(result), false)
+        setAreaContents("resultText", result, false)
       }
 
       let timingStr = "Network: " + network + " ms<br>Deploy: " + deploy + " ms<br>Exec: " + exec + " ms"

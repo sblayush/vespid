@@ -10,14 +10,16 @@ from api.VUIApp.VUIApp import VUIApp
 from api.common.error import *
 
 from datetime import datetime
+import time
 import uvicorn
 import logging
 import json
 
 _APP_PATH = get_dir_path()
 create_dir("{}/logs".format(_APP_PATH))
-log_filename = "{}/logs/log_{}.log".format(
-	_APP_PATH, datetime.now().strftime('%d_%m_%Y'))
+date_time = datetime.now()
+log_filename = "{}/logs/test3_{}.log".format(
+	_APP_PATH, time.mktime(date_time.timetuple()))
 format = logging.Formatter(
 	fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='%H:%M:%S')
 
