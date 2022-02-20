@@ -6,18 +6,18 @@ from fastapi.exceptions import RequestValidationError
 
 from api.utilities.utilities import get_dir_path, create_dir, read_json
 from api.actions.ActionsManager import ActionsManager
-from api.VUIApp.VUIApp import VUIApp
 from api.common.error import *
 
 from datetime import datetime
+import time
 import uvicorn
 import logging
-import json
 
 _APP_PATH = get_dir_path()
 create_dir("{}/logs".format(_APP_PATH))
-log_filename = "{}/logs/log_{}.log".format(
-	_APP_PATH, datetime.now().strftime('%d_%m_%Y'))
+date_time = datetime.now()
+log_filename = "{}/logs/test7_{}.log".format(
+	_APP_PATH, time.mktime(date_time.timetuple()))
 format = logging.Formatter(
 	fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='%H:%M:%S')
 
@@ -82,7 +82,7 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 			raise MissingArgumentError(vname)
 		vcode = code.vcode
 		runtime = code.runtime
-		if runtime not in {'c', 'js', 'cnative'}:
+		if runtime not in {'c', 'js', 'cnative', 'jsnative'}:
 			raise InvalidActionError("Unknown runtime: {}".format(runtime))
 		logging.info(
 		"""And: vcode- {}, runtime- {}""".format(vcode, runtime))

@@ -4,6 +4,7 @@ from api.common.error import *
 from api.actions.CAction import CAction
 from api.actions.CNativeAction import CNativeAction
 from api.actions.JSAction import JSAction
+from api.actions.JSNativeAction import JSNativeAction
 import logging
 import pickle
 import time
@@ -36,6 +37,10 @@ class ActionsManager(ActionsManagerInterface):
 			act = CAction()
 		elif runtime == 'cnative':
 			act = CNativeAction()
+		elif runtime == 'js':
+			act = JSAction()
+		elif runtime == 'jsnative':
+			act = JSNativeAction()
 		else:
 			act = JSAction()
 		try:
@@ -70,7 +75,7 @@ class ActionsManager(ActionsManagerInterface):
 		if vname not in self.actions:
 			raise InvalidActionError(vname)
 		act = self.actions[vname]
-		if len(args) != len(act.parameters):
+		if act.runtime in {'c', 'cnative'} and len(args) != len(act.parameters):
 			raise InvalidSignatureError(vname)
 		res = self.actions[vname].invoke(args)
 		end = time.time()

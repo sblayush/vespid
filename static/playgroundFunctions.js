@@ -40,13 +40,15 @@ $(document).ready(function(){
     JavaScript: {
         name: "JavaScript",
         editMode: "ace/mode/javascript",
-        kind: "nodejs",
-        example:`function main(args) {
-    let name = args.name || 'stranger'
-    let greeting = 'Hello ' + name + '!'
-    console.log(greeting)
-    return {"body":  greeting}
-}`
+        kind: "js",
+        example:`function offset(num) { return num + 10; };`
+    },
+
+    JSNative: {
+        name: "JSNative",
+        editMode: "ace/mode/javascript",
+        kind: "jsnative",
+        example:`function offset(num) { return num + 10; };`
     },
 
     Python: {
@@ -114,7 +116,7 @@ function main(array $args) : array {
     c: {
         name: 'c',
         editMode: 'ace/mode/c_cpp',
-        kind: `c`,
+        kind: 'c',
         example: `int add(int a, int b){
   return a+b;
 }`
@@ -255,7 +257,7 @@ function initializeLanguage() {
   selector.options.length = 0 // probably unneeded but just in case this gets done more than once
   for (member in window.languages) {
     let languageName = window.languages[member].name
-    if (languageName == "JavaScript" || languageName == "c" || languageName == "cnative"){
+    if (languageName == "JSNative" || languageName == "JavaScript" || languageName == "c" || languageName == "cnative"){
       console.log("Adding language " + languageName + " to selector")
       selector.options[selector.options.length] = new Option(languageName, languageName)
     }
@@ -707,6 +709,10 @@ function setAreaContents(areaID, contents, error) {
 function get_parameters(vcode){
   let parameters = {}
   let inp_params = vcode.split('(')[1].split(')')[0].split(',')
+  console.log("inp_params", inp_params);
+  if(inp_params.length <= 1)
+    return {}
+
   for (param of inp_params){
     param = param.trim().split(' ')
 		let typ = param[0]
@@ -731,6 +737,7 @@ function createClicked() {
     let t0 = new Date().getTime()
     let inputStr = elem("input").value
     let arg = { vcode : contents, runtime: window.language.kind }
+    console.log(arg);
     let vname = window.currentAction
 
     if (get_action_name(contents)!=vname){
@@ -881,7 +888,7 @@ function runClicked() {
       if (result.body && result.headers && result.headers['content-type'] == 'image/jpeg') {
         setAreaContents("resultText", '<img src="data:image/png;base64, ' + result.body + '">', false)
       } else {
-        setAreaContents("resultText", eval(result), false)
+        setAreaContents("resultText", result, false)
       }
 
       let timingStr = "Network: " + network + " ms<br>Deploy: " + deploy + " ms<br>Exec: " + exec + " ms"

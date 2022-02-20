@@ -1,6 +1,12 @@
 import os
 import json
 from datetime import datetime
+import random
+import string
+
+def rand_str(N=10):
+    chars = string.ascii_uppercase + string.digits + string.ascii_lowercase 
+    return ''.join(random.choice(chars) for _ in range(N))
 
 def get_dir_path():
     return os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))).replace('\\', '/')
