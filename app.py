@@ -6,19 +6,17 @@ from fastapi.exceptions import RequestValidationError
 
 from api.utilities.utilities import get_dir_path, create_dir, read_json
 from api.actions.ActionsManager import ActionsManager
-from api.VUIApp.VUIApp import VUIApp
 from api.common.error import *
 
 from datetime import datetime
 import time
 import uvicorn
 import logging
-import json
 
 _APP_PATH = get_dir_path()
 create_dir("{}/logs".format(_APP_PATH))
 date_time = datetime.now()
-log_filename = "{}/logs/test3_{}.log".format(
+log_filename = "{}/logs/test7_{}.log".format(
 	_APP_PATH, time.mktime(date_time.timetuple()))
 format = logging.Formatter(
 	fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='%H:%M:%S')

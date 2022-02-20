@@ -2,28 +2,31 @@ from api.actions.BaseAction import BaseAction
 from api.utilities.utilities import create_dir, get_dir_path, does_dir_exist
 from config.paths import wasp_js_shared_ob_path
 from api.common.error import *
-import subprocess
 import logging
 import time
 import ctypes
-import os
 
 func_code_template = """
 var b64 = {}(####vargs####);
 hcall_return(b64);"""
 
 _PWD = get_dir_path()
-_TEMP_PATH = "{}/temp/js_native".format(_PWD)
 _CODE_PATH = "{}/virts/js_native".format(_PWD)
-_BIN_PATH = "{}/virts/js_native".format(_PWD)
 
 VIRTINE_PROC_IDENTIFIER = "virtine"
+libname = wasp_js_shared_ob_path
+c_lib = ctypes.CDLL(libname)
+c_lib.js_x.restype = ctypes.c_char_p
 
+with open("{}/jsn/func_jsn.js".format(_CODE_PATH, 'r')) as file:
+	vcode = file.read()
 
 class JSNativeAction(BaseAction):
 	def __init__(self):
 		super().__init__()
 		self.runtime = 'jsnative'
+		# self.c_lib = None
+		self.vcode = None
 
 	def insert_code(self, vname, vcode):
 		self.action_code = vcode
@@ -37,25 +40,23 @@ class JSNativeAction(BaseAction):
 		pass
 
 	def call_bin(self, args):
-		libname = wasp_js_shared_ob_path
-		c_lib = ctypes.CDLL(libname)
-		c_lib.js_x.restype = ctypes.c_char_p
+		js_code = vcode.replace("####vargs####", args)
+		js_code = js_code.encode("utf-8")
+		start = time.time()
+		ret = c_lib.js_x(js_code)
+		end = time.time()
 
-		with open("{}/{}/func_{}.js".format(_CODE_PATH, self.action_name, self.action_name), 'r') as file:
-			js_code = file.read().replace("####vargs####", args)
-			js_code = js_code.encode("utf-8")
-			start = time.time()
-			ret = c_lib.js_x(js_code)
-			end = time.time()
-			hits = ctypes.c_uint32()
-			misses = ctypes.c_int32()
-			c_lib.get_cache_stats(ctypes.byref(misses), ctypes.byref(hits))
-			logging.log(logging.CRITICAL, 
-			"exec_jsn- ###start###:" + str(start*1000) + \
-			", ###end###:" + str(end*1000) + \
-			", ###hits###:" + str(hits.value) + \
-			", ###misses###:" + str(misses.value))
-			return ret, (end-start)*1000, misses.value, hits.value
+		hits = ctypes.c_uint32()
+		misses = ctypes.c_int32()
+		c_lib.get_cache_stats(ctypes.byref(misses), ctypes.byref(hits))
+		logging.log(logging.CRITICAL, 
+		"exec_jsn- ###start###:" + str(start*1000) + \
+		", ###end###:" + str(end*1000) + \
+		", ###hits###:" + str(hits.value) + \
+		", ###misses###:" + str(misses.value) + \
+		", ###latency###:" + str((end-start)*1000)
+		)
+		return ret.decode('utf-8'), (end-start)*1000, misses.value, hits.value
 
 	def execute_code(self, vargs):
 		try:
@@ -66,5 +67,5 @@ class JSNativeAction(BaseAction):
 				"misses": misses,
 				"hits": hits
 			}
-		except:
-			raise  ActionInvokeError(self.action_name, err.decode())
+		except Exception as e:
+			raise ActionInvokeError(self.action_name, str(e))
