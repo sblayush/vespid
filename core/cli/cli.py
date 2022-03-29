@@ -7,11 +7,12 @@ import logging
 import os
 
 import sys
-sys.path.append("/home/cc/ayush/vespid/")
+_VESP_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))).replace('\\', '/')
+sys.path.append(_VESP_PATH)
 
 from common.error import *
 
-localenv_path = "/home/cc/ayush/vespid/core/cli/localenv"
+localenv_path = _VESP_PATH + "/core/cli/localenv"
 app = typer.Typer()
 localenv = json.load(open(localenv_path, 'r'))
 filetype_map = {

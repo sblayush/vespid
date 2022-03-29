@@ -4,8 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.exceptions import RequestValidationError
 
-import sys
-sys.path.append("/home/cc/ayush/vespid/")
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))).replace('\\', '/'))
 
 from common.utilities.utilities import get_dir_path, create_dir, read_json
 from core.action_manager.ActionsManager import ActionsManager
