@@ -1,0 +1,5 @@
+#!/bin/bash
+
+vesp() {
+	python3 ~/vespid/core/cli/cli.py $@
+}

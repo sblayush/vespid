@@ -1,0 +1,103 @@
+diff --git a/locust/stats.py b/locust/stats.py
+index b2fc3a1c..04c5aa43 100644
+--- a/locust/stats.py
++++ b/locust/stats.py
+@@ -8,12 +8,10 @@ import os
+ import csv
+ import signal
+ import gevent
+-import json
+ 
+ from .exception import StopUser, CatchResponseError
+ 
+ import logging
+-file = open('filename1.csv', 'w')
+ 
+ console_logger = logging.getLogger("locust.stats_logger")
+ 
+@@ -237,11 +235,6 @@ class StatsEntry:
+         self.num_failures = 0
+         """ Number of failed request """
+         self.total_response_time = 0
+-
+-        """List of response times"""
+-        self.response_times_list = []
+-        self.timestamp_list = []
+-
+         """ Total sum of the response times """
+         self.min_response_time = None
+         """ Minimum response time """
+@@ -280,7 +273,6 @@ class StatsEntry:
+         self.num_none_requests = 0
+         self.num_failures = 0
+         self.total_response_time = 0
+-        self.response_times_list = []
+         self.response_times = {}
+         self.min_response_time = None
+         self.max_response_time = 0
+@@ -305,9 +297,6 @@ class StatsEntry:
+         self._log_time_of_request(current_time)
+         self._log_response_time(response_time)
+ 
+-        # Adding response time to the response_time_list
+-        file.write("{}, {}\n".format(current_time, response_time))
+-
+         # increase total content-length
+         self.total_content_length += content_length
+ 
+@@ -487,7 +476,6 @@ class StatsEntry:
+             "num_failures": self.num_failures,
+             "total_response_time": self.total_response_time,
+             "max_response_time": self.max_response_time,
+-            "response_times_list": self.response_times_list,
+             "min_response_time": self.min_response_time,
+             "total_content_length": self.total_content_length,
+             "response_times": self.response_times,
+@@ -506,7 +494,6 @@ class StatsEntry:
+             "num_failures",
+             "total_response_time",
+             "max_response_time",
+-            'response_times_list',
+             "min_response_time",
+             "total_content_length",
+             "response_times",
+@@ -833,7 +820,6 @@ class StatsCSV:
+             "Failure Count",
+             "Median Response Time",
+             "Average Response Time",
+-            "response_times_list"
+             "Min Response Time",
+             "Max Response Time",
+             "Average Content Size",
+@@ -881,7 +867,6 @@ class StatsCSV:
+                         stats_entry.num_failures,
+                         stats_entry.median_response_time,
+                         stats_entry.avg_response_time,
+-                        stats_entry.response_times_list,
+                         stats_entry.min_response_time or 0,
+                         stats_entry.max_response_time,
+                         stats_entry.avg_content_length,
+@@ -950,7 +935,6 @@ class StatsCSVFileWriter(StatsCSV):
+             "Total Failure Count",
+             "Total Median Response Time",
+             "Total Average Response Time",
+-            "Response Time",
+             "Total Min Response Time",
+             "Total Max Response Time",
+             "Total Average Content Size",
+@@ -1034,7 +1018,6 @@ class StatsCSVFileWriter(StatsCSV):
+                         stats_entry.num_failures,
+                         stats_entry.median_response_time,
+                         stats_entry.avg_response_time,
+-                        stats_entry.response_times_list[-1] if len(stats_entry.response_times_list)>0 else 0,
+                         stats_entry.min_response_time or 0,
+                         stats_entry.max_response_time,
+                         stats_entry.avg_content_length,
+@@ -1059,7 +1042,6 @@ class StatsCSVFileWriter(StatsCSV):
+         self.stats_history_csv_filehandle.close()
+         self.failures_csv_filehandle.close()
+         self.exceptions_csv_filehandle.close()
+-        file.close()
+ 
+     def stats_history_file_name(self):
+         return self.base_filepath + "_stats_history.csv"
