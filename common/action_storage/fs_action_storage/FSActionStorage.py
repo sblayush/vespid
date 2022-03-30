@@ -1,4 +1,3 @@
-from this import d
 from common.action_storage.ActionStorageInterface import ActionStorageInterface
 from common.utilities.utilities import create_dir, get_dir_path, does_dir_exist, remove_file
 from common.error import *
@@ -10,11 +9,11 @@ _PWD = get_dir_path()
 _ACTIONS_PATH = "{}/virts/actions".format(_PWD)
 
 
-class ActionStorageFS(ActionStorageInterface):
+class FSActionStorage(ActionStorageInterface):
 	def __init__(self) -> None:
 		self.initial_checks()
 		self.actions_list = None
-		self.load_actions_list()
+		self.get_actions_list()
 
 	def initial_checks(self):
 		create_dir(_ACTIONS_PATH)
@@ -32,7 +31,7 @@ class ActionStorageFS(ActionStorageInterface):
 		except:
 			logging.exception("No actions to load!")
 
-	def load_actions_list(self):
+	def get_actions_list(self):
 		with open("{}/actions_list.json".format(_ACTIONS_PATH), 'r') as f:
 			self.actions_list = json.load(f)
 		return self.actions_list
@@ -55,3 +54,4 @@ class ActionStorageFS(ActionStorageInterface):
 		if vname in self.actions_list:
 			self.actions_list.remove(vname)
 		remove_file("{}/action_{}.pkl".format(_ACTIONS_PATH, vname))
+		self.save_actions_list()
