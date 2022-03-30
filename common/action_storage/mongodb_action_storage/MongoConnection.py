@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import logging
 
 
 class MongoConnection:
@@ -8,10 +9,9 @@ class MongoConnection:
 	def create_db_connection(self, url):
 		try:
 			conn = MongoClient(url)
-			print('Succesfully connected to mongodb... ')
 			return conn
 		except Exception as e:
-			print(e)
+			logging.exception(str(e))
 
 	def execute_query(self, query, should_commit=False, should_return=False, *args):
 		print("Executing query: " + query)

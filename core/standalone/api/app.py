@@ -35,7 +35,10 @@ app_config = read_json("{}/config/appConfig.dat".format(_APP_PATH))
 
 port = app_config['port']
 host = app_config['host']
-rload = app_config['reload']
+if app_config['platform'] == "DEV":
+	reload = app_config['reload']
+else:
+	reload = False
 n_workers = app_config['n_workers']
 
 app = FastAPI()
@@ -181,4 +184,4 @@ def home(request: Request):
 	return html_content
 
 if __name__ == "__main__":
-	uvicorn.run("app:app", port=port, host=host, reload=rload, workers=n_workers)
+	uvicorn.run("app:app", port=port, host=host, reload=reload, workers=n_workers)

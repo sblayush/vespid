@@ -1,6 +1,6 @@
 from common.action_storage.ActionStorageInterface import ActionStorageInterface
 from common.action_storage.mongodb_action_storage.MongoConnection import MongoConnection
-from common.utilities.utilities import get_dir_path, create_dir, read_json
+from common.utilities.utilities import get_dir_path, read_json
 from common.error import *
 import bson
 import pickle

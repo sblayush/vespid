@@ -38,16 +38,16 @@ host = app_config['host']
 rload = app_config['reload']
 n_workers = app_config['n_workers']
 
-app = FastAPI()
+invoker = FastAPI()
 AM = ActionsManager()
 
-app.mount(
+invoker.mount(
     "/core/standalone/ui/static",
     StaticFiles(directory="{}/core/standalone/ui/static".format(_APP_PATH)),
     name="static",
 )
 
-@app.get("/ping")
+@invoker.get("/ping")
 def ping(response: Response):
     response.status_code = 200
     return "pong"
@@ -69,11 +69,11 @@ def log_message(request: Request, e):
     print(f'error is {e}')
     print('end error'.center(60, '*'))
 
-@app.exception_handler(RequestValidationError)
+@invoker.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
     log_message(request, exc)
 
-@app.post("/actions/{vname}/create")
+@invoker.post("/actions/{vname}/create")
 def create(vname: str, code: CodeParam, response: Response, request: Request):
 	"""
 	Create an action
@@ -98,7 +98,7 @@ def create(vname: str, code: CodeParam, response: Response, request: Request):
 		response.status_code = e.status
 		return resp
 
-@app.post("/actions/{vname}/invoke")
+@invoker.post("/actions/{vname}/invoke")
 def invoke(vname, args: ArgParam, response: Response):
 	"""
 	Invoke an action
@@ -120,7 +120,7 @@ def invoke(vname, args: ArgParam, response: Response):
 		return resp
 
 
-@app.post("/actions/{vname}/get")
+@invoker.post("/actions/{vname}/get")
 def get(vname, response: Response):
 	"""
 	Get action info
@@ -138,7 +138,7 @@ def get(vname, response: Response):
 		return resp
 
 
-@app.post("/actions/list")
+@invoker.post("/actions/list")
 def list(params: PlaygroundParam, response: Response):
 	"""
 	Get list of actions
@@ -156,7 +156,7 @@ def list(params: PlaygroundParam, response: Response):
 		return resp
 
 
-@app.post("/actions/{vname}/delete")
+@invoker.post("/actions/{vname}/delete")
 def delete(vname, response: Response):
 	"""
 	Delete action
@@ -174,11 +174,11 @@ def delete(vname, response: Response):
 		return resp
 
 
-@app.get("/", response_class=HTMLResponse)
+@invoker.get("/", response_class=HTMLResponse)
 def home(request: Request):
 	with open(_APP_PATH + "/core/standalone/ui/templates/index.html", 'r') as f:
 		html_content = f.read()
 	return html_content
 
 if __name__ == "__main__":
-	uvicorn.run("app:app", port=port, host=host, reload=rload, workers=n_workers)
+	uvicorn.run("app:invoker", port=port, host=host, reload=rload, workers=n_workers)
