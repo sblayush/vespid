@@ -2,6 +2,7 @@ from core.action_manager.ActionsManagerInterface import ActionsManagerInterface
 from common.error import *
 from common.action_storage.fs_action_storage.FSActionStorage import FSActionStorage
 from common.action_storage.mongodb_action_storage.MongoActionStorage import MongoActionStorage
+from common.action_storage.mongodb_redis_action_storage.MongoRedisActionStorage import MongoRedisActionStorage
 from core.actions.CAction import CAction
 from core.actions.CNativeAction import CNativeAction
 from core.actions.JSAction import JSAction
@@ -20,7 +21,7 @@ action_class_map = {
 class ActionsManager(ActionsManagerInterface):
 	def __init__(self):
 		super().__init__()
-		self.action_storage = MongoActionStorage()
+		self.action_storage = MongoRedisActionStorage()
 		self.load_actions()
 
 	def load_actions(self):
