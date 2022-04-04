@@ -1,4 +1,4 @@
-from core.action_manager.actions.ActionInterface import ActionInterface
+from core.actions.ActionInterface import ActionInterface
 from common.error import *
 import subprocess
 

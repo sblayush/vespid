@@ -1,7 +1,11 @@
 {
     "port": 8989,
     "host": "0.0.0.0",
-	"platform": "DEV",
-    "reload": true,
-    "n_workers": 64
+	"platform": "PROD",
+    "reload": false,
+    "n_workers": 2,
+    "mongo_host": "192.5.86.183",
+    "mongo_port": 27017,
+    "redis_host": "192.5.86.183",
+    "redis_port": 6379
 }

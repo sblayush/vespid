@@ -1,4 +1,4 @@
-from core.action_manager.actions.BaseAction import BaseAction
+from core.actions.BaseAction import BaseAction
 from common.utilities.utilities import create_dir, get_dir_path, does_dir_exist
 from common.error import *
 import subprocess

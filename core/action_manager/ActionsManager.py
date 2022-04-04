@@ -1,10 +1,12 @@
 from core.action_manager.ActionsManagerInterface import ActionsManagerInterface
 from common.error import *
-from common.action_storage.action_storage_fs.ActionStorageFS import ActionStorageFS
-from core.action_manager.actions.CAction import CAction
-from core.action_manager.actions.CNativeAction import CNativeAction
-from core.action_manager.actions.JSAction import JSAction
-from core.action_manager.actions.JSNativeAction import JSNativeAction
+from common.action_storage.fs_action_storage.FSActionStorage import FSActionStorage
+from common.action_storage.mongodb_action_storage.MongoActionStorage import MongoActionStorage
+from common.action_storage.mongodb_redis_action_storage.MongoRedisActionStorage import MongoRedisActionStorage
+from core.actions.CAction import CAction
+from core.actions.CNativeAction import CNativeAction
+from core.actions.JSAction import JSAction
+from core.actions.JSNativeAction import JSNativeAction
 import logging
 import time
 
@@ -19,11 +21,11 @@ action_class_map = {
 class ActionsManager(ActionsManagerInterface):
 	def __init__(self):
 		super().__init__()
-		self.action_storage = ActionStorageFS()
+		self.action_storage = MongoRedisActionStorage()
 		self.load_actions()
 
 	def load_actions(self):
-		for vname in self.action_storage.load_actions_list():
+		for vname in self.action_storage.get_actions_list():
 			self.actions[vname] = self.action_storage.load_action(vname)
 	
 	def save_action(self, vname):

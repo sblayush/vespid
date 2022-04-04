@@ -9,11 +9,7 @@ class ActionStorageInterface(ABC):
 		pass
 
 	@abstractmethod
-	def load_actions_list(self):
-		pass
-
-	@abstractmethod
-	def save_actions_list(self):
+	def get_actions_list(self):
 		pass
 
 	@abstractmethod

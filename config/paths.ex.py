@@ -1,5 +1,5 @@
-wasp_shared_ob_path = ""
-wasp_js_shared_ob_path = ""
-js_exec_path = ""
-db_type = ''
-db_file_path = ''
+wasp_shared_ob_path = ""		# "/home/cc/wasp/build/libwasp.so"
+wasp_js_shared_ob_path = ""		# "/home/cc/wasp/build/libwasp_js_x.so"
+js_exec_path = ""				# "/home/cc/wasp/build/test/js"
+db_type = ""
+db_file_path = ""
